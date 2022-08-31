@@ -1,0 +1,43 @@
+version: "3.9"
+services:
+  neo4j:
+    image: neo4j:4.4.9-community
+    restart: unless-stopped
+    ports:
+      - 7474:7474
+      - 7687:7687
+    volumes:
+      - /conf
+      - /data
+      - /import
+      - /logs
+      - /plugins
+    environment:
+      - NEO4J_dbms_memory_pagecache_size=1G
+      - NEO4J_dbms.memory.heap.initial_size=1G
+      - NEO4J_dbms_memory_heap_max__size=1G
+      - NEO4J_dbms_shell_enabled=true
+      - NEO4J_AUTH=none
+  api-public:
+    image: gradle:jdk18
+    depends_on:
+      - neo4j
+    volumes:
+      - ./gropius-backend:/gropius-backend
+    working_dir: /gropius-backend
+    command: gradle api-public:bootRun
+    environment:
+      - SPRING_NEO4J_URI=bolt://neo4j:7687
+    network_mode: host
+  api-internal:
+    image: gradle:jdk18
+    depends_on:
+      - neo4j
+    volumes:
+      - ./gropius-backend:/gropius-backend
+    working_dir: /gropius-backend
+    command: "gradle api-internal:bootRun"
+    environment:
+      - SPRING_NEO4J_URI=bolt://neo4j:7687
+      - SERVER_PORT=8081
+    network_mode: host
