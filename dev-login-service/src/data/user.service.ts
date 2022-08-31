@@ -7,9 +7,9 @@ export class UserService {
     async getGropiusUserById(id: string): Promise<GropiusUser | null> {
         try {
             return (
-                await request<{ node: GropiusUser }>(
-                    process.env.API_ENDPOINT,
-                    gql`
+                await request<{ node: GropiusUser }>({
+                    url: process.env.API_ENDPOINT,
+                    document: gql`
                         query User($id: ID!) {
                             node(id: $id) {
                                 ... on GropiusUser {
@@ -20,8 +20,11 @@ export class UserService {
                             }
                         }
                     `,
-                    { id: id },
-                )
+                    variables: { id: id },
+                    requestHeaders: {
+                        Authorization: "Baerer " + process.env.INTERNAL_API_KEY,
+                    },
+                })
             ).node;
         } catch (err) {
             console.error(err);
@@ -34,9 +37,9 @@ export class UserService {
     ): Promise<GropiusUser | null> {
         try {
             return (
-                await request<{ node: GropiusUser }>(
-                    process.env.API_ENDPOINT,
-                    gql`
+                await request<{ node: GropiusUser }>({
+                    url: process.env.API_ENDPOINT,
+                    document: gql`
                         query User($name: String!) {
                             users(name: $name) {
                                 ... on GropiusUser {
@@ -47,8 +50,11 @@ export class UserService {
                             }
                         }
                     `,
-                    { name: username },
-                )
+                    variables: { name: username },
+                    requestHeaders: {
+                        Authorization: "Baerer " + process.env.INTERNAL_API_KEY,
+                    },
+                })
             ).node;
         } catch (err) {
             console.error(err);
@@ -64,9 +70,9 @@ export class UserService {
     }): Promise<GropiusUser> {
         return await request<{
             createGropiusUser: { gropiusUser: GropiusUser };
-        }>(
-            process.env.API_ENDPOINT,
-            gql`
+        }>({
+            url: process.env.API_ENDPOINT,
+            document: gql`
                 mutation Create($input: CreateGropiusUserInput!) {
                     createGropiusUser(input: $input) {
                         gropiusUser {
@@ -77,8 +83,11 @@ export class UserService {
                     }
                 }
             `,
-            { input },
-        ).then((user) => {
+            variables: { input },
+            requestHeaders: {
+                Authorization: "Baerer " + process.env.INTERNAL_API_KEY,
+            },
+        }).then((user) => {
             console.log(user);
             return user.createGropiusUser.gropiusUser;
         });
