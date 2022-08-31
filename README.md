@@ -11,7 +11,7 @@ TBD
 Caution: this setup should only be used for development!
 
 ```sh
-docker-compose -f docker-compose-dev.yaml
+docker-compose -f docker-compose-dev.yaml up
 ```
 
 This will provide
