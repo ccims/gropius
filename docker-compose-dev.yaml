@@ -30,6 +30,7 @@ services:
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
       - GROPIUS_API_PUBLIC_JWT_SECRET=ThisIsAnExampleJwtSecretDoNotUseInProduction
+      - GROPIUS_API_PUBLIC_DEBUG_NO_AUTHENTICATION=true
     cap_add:
       - SYS_ADMIN
   api-internal:
