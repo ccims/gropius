@@ -40,7 +40,7 @@ services:
     depends_on:
       - neo4j
     ports:
-      - 8081:8080
+      - 8081:8081
     volumes:
       - ./gropius-backend:/root/gropius-backend:ro
     command: bash -c "./mount-gropius-backend.sh && cd gropius-backend-workdir && gradle api-internal:bootRun"
