@@ -22,7 +22,7 @@ export class UserService {
                     `,
                     variables: { id: id },
                     requestHeaders: {
-                        Authorization: "Baerer " + process.env.INTERNAL_API_KEY,
+                        Authorization: "Bearer " + process.env.INTERNAL_API_KEY,
                     },
                 })
             ).node;
@@ -52,7 +52,7 @@ export class UserService {
                     `,
                     variables: { name: username },
                     requestHeaders: {
-                        Authorization: "Baerer " + process.env.INTERNAL_API_KEY,
+                        Authorization: "Bearer " + process.env.INTERNAL_API_KEY,
                     },
                 })
             ).node;
@@ -85,7 +85,7 @@ export class UserService {
             `,
             variables: { input },
             requestHeaders: {
-                Authorization: "Baerer " + process.env.INTERNAL_API_KEY,
+                Authorization: "Bearer " + process.env.INTERNAL_API_KEY,
             },
         }).then((user) => {
             console.log(user);
