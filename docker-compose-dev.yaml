@@ -29,6 +29,8 @@ services:
     command: bash -c "./mount-gropius-backend.sh && cd gropius-backend-workdir && gradle api-public:bootRun"
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
+    security_opt:
+      - apparmor=unconfined
     cap_add:
       - SYS_ADMIN
   api-internal:
@@ -43,5 +45,7 @@ services:
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
       - SERVER_PORT=8081
+    security_opt:
+      - apparmor=unconfined
     cap_add:
       - SYS_ADMIN
