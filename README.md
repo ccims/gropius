@@ -17,3 +17,11 @@ docker-compose -f docker-compose-dev.yaml up
 This will provide
 - The public api on port 8080: http://localhost:8080/playground
 - The internal api on port 8081: http://localhost:8081/playground
+
+### GitHub sync
+
+To execute the github sync use:
+
+```sh
+GITHUB_DUMMY_PAT=YourGithubToken docker-compose -f docker-compose-dev.yaml up github
+```
