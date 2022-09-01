@@ -19,25 +19,29 @@ services:
       - NEO4J_dbms_shell_enabled=true
       - NEO4J_AUTH=none
   api-public:
-    image: gradle:jdk18
+    build: ./dev-container
     depends_on:
       - neo4j
+    ports:
+      - 8080:8080
     volumes:
-      - ./gropius-backend:/gropius-backend
-    working_dir: /gropius-backend
-    command: gradle api-public:bootRun
+      - ./gropius-backend:/root/gropius-backend:ro
+    command: bash -c "./mount-gropius-backend.sh && cd gropius-backend-workdir && gradle api-public:bootRun"
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
-    network_mode: host
+    cap_add:
+      - SYS_ADMIN
   api-internal:
-    image: gradle:jdk18
+    build: ./dev-container
     depends_on:
       - neo4j
+    ports:
+      - 8081:8080
     volumes:
-      - ./gropius-backend:/gropius-backend
-    working_dir: /gropius-backend
-    command: "gradle api-internal:bootRun"
+      - ./gropius-backend:/root/gropius-backend:ro
+    command: bash -c "./mount-gropius-backend.sh && cd gropius-backend-workdir && gradle api-internal:bootRun"
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
       - SERVER_PORT=8081
-    network_mode: host
+    cap_add:
+      - SYS_ADMIN
