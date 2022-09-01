@@ -24,14 +24,15 @@ export class AppController {
 
     @Get()
     getHello(): string {
+        console.log("Bla");
         return this.htmlService.stringWrapHtml(
             this.htmlService.linebreaks(
-                "Dev-Login service.\nGet API token by posting username to /token?user=[USERNAME]\n",
+                "Dev-Login service.\nGet API token by for example posting username to /token?username=[USERNAME]\n",
             ) +
                 this.htmlService.getForm(
                     "Generate Token (fill EITHER):",
                     {
-                        name: { label: "Username: " },
+                        username: { label: "Username: " },
                         id: { label: "User-Id: " },
                     },
                     "/token",
@@ -59,7 +60,7 @@ export class AppController {
 
     @Get("/token")
     async createToken(
-        @Query("user") user: string,
+        @Query("username") user: string,
         @Query("id") id: string,
     ): Promise<string> {
         if (!user && !id) {

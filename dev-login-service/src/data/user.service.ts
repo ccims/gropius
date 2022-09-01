@@ -37,11 +37,11 @@ export class UserService {
     ): Promise<GropiusUser | null> {
         try {
             return (
-                await request<{ node: GropiusUser }>({
+                await request<{ gropiusUser: GropiusUser }>({
                     url: process.env.API_ENDPOINT,
                     document: gql`
                         query User($name: String!) {
-                            users(name: $name) {
+                            gropiusUser(username: $name) {
                                 ... on GropiusUser {
                                     id
                                     username
@@ -55,7 +55,7 @@ export class UserService {
                         Authorization: "Bearer " + process.env.INTERNAL_API_KEY,
                     },
                 })
-            ).node;
+            ).gropiusUser;
         } catch (err) {
             console.error(err);
             return null;
