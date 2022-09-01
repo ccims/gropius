@@ -29,6 +29,7 @@ services:
     command: bash -c "./mount-gropius-backend.sh && cd gropius-backend-workdir && gradle api-public:bootRun"
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
+      - GROPIUS_API_PUBLIC_JWT_SECRET=ThisIsAnExampleJwtSecretDoNotUseInProduction
     cap_add:
       - SYS_ADMIN
   api-internal:
@@ -45,3 +46,18 @@ services:
       - SERVER_PORT=8081
     cap_add:
       - SYS_ADMIN
+  dev-login-service:
+    image: node:18
+    depends_on:
+      - api-internal
+    ports:
+      - 3000:3000
+    volumes: 
+      - ./dev-login-service:/app
+    working_dir: /app
+    command: bash -c "npm i && npm run start"
+    environment:
+      - API_ENDPOINT=http://api-internal:8081/graphql
+      - JWT_SECRET=ThisIsAnExampleJwtSecretDoNotUseInProduction
+      - JWT_ISSUER=dev-login-service
+      - INTERNAL_API_KEY=api_key

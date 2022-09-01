@@ -14,7 +14,7 @@ import { HtmlService } from "./html/html.service";
             envFilePath: [".env.development.local", ".env.development"],
         }),
         JwtModule.register({
-            secret: process.env.JWT_SECRET,
+            secret: Buffer.from(process.env.JWT_SECRET, "base64"),
             signOptions: {
                 issuer: process.env.JWT_ISSUER,
             },
