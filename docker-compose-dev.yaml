@@ -66,3 +66,35 @@ services:
       - JWT_SECRET=ThisIsAnExampleJwtSecretDoNotUseInProduction
       - JWT_ISSUER=dev-login-service
       - INTERNAL_API_KEY=api_key
+  mongo:
+    image: mongo
+    profiles:
+      - github
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - 27017:27017
+  github:
+    build: ./dev-container
+    profiles:
+      - github
+    depends_on:
+      - neo4j
+      - mongo
+    volumes:
+      - ./gropius-backend:/root/gropius-backend:ro
+    command: bash -c "./mount-gropius-backend.sh && cd gropius-backend-workdir && gradle github:bootRun"
+    environment:
+      - SPRING_NEO4J_URI=bolt://neo4j:7687
+      - SPRING_DATA_MONGODB_HOST=mongo
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATA_MONGODB_DATABASE=gropius
+      - SPRING_DATA_MONGODB_USERNAME=root
+      - SPRING_DATA_MONGODB_PASSWORD=root
+      - GITHUB_DUMMY_PAT=${GITHUB_DUMMY_PAT}
+    security_opt:
+      - apparmor=unconfined
+    cap_add:
+      - SYS_ADMIN
