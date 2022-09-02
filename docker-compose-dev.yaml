@@ -68,6 +68,8 @@ services:
       - INTERNAL_API_KEY=api_key
   mongo:
     image: mongo
+    profiles:
+      - github
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
