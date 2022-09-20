@@ -49,7 +49,7 @@ services:
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: TODO_root
+      MONGO_INITDB_ROOT_PASSWORD: TODO_mongo_password
     ports:
       - 27017:27017
   github:
@@ -69,7 +69,7 @@ services:
       - SPRING_DATA_MONGODB_PORT=27017
       - SPRING_DATA_MONGODB_DATABASE=gropius
       - SPRING_DATA_MONGODB_USERNAME=root
-      - SPRING_DATA_MONGODB_PASSWORD=TODO_root
+      - SPRING_DATA_MONGODB_PASSWORD=TODO_mongo_password
       - GROPIUS_SYNC_GITHUB_LOGIN_SERVICE_BASE=http://loginservice:3000/
       - GROPIUS_SYNC_GITHUB_API_SECRET=TODO_loginSecret
       - GROPIUS_SYNC_GITHUB_INTERVAL=1h
