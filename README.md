@@ -15,7 +15,7 @@ This will provide
 
 ## Development
 
-Caution: this setup should only be used for development!
+> :warning: **This setup should only be used for development!**
 
 ```sh
 docker-compose -f docker-compose-dev.yaml up
