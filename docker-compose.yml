@@ -44,3 +44,34 @@ services:
       - SPRING_NEO4J_AUTHENTICATION_USERNAME=neo4j
       - SPRING_NEO4J_AUTHENTICATION_PASSWORD=TodoNeo4jPassword
       - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - 27017:27017
+  github:
+    build: ./dev-container
+    depends_on:
+      - neo4j
+      - mongo
+      - loginservice
+    volumes:
+      - ./gropius-backend:/root/gropius-backend:ro
+    command: bash -c "./mount-gropius-backend.sh && cd gropius-backend-workdir && while true; do gradle github:bootRun; sleep $GROPIUS_SYNC_GITHUB_INTERVAL;done"
+    environment:
+      - SPRING_NEO4J_URI=bolt://neo4j:7687
+      - SPRING_DATA_MONGODB_HOST=mongo
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATA_MONGODB_DATABASE=gropius
+      - SPRING_DATA_MONGODB_USERNAME=root
+      - SPRING_DATA_MONGODB_PASSWORD=root
+      - GROPIUS_SYNC_GITHUB_LOGIN_SERVICE_BASE=http://loginservice:3000/
+      - GROPIUS_SYNC_GITHUB_API_SECRET=loginSecret
+      - GROPIUS_SYNC_GITHUB_INTERVAL=1h
+    security_opt:
+      - apparmor=unconfined
+    cap_add:
+      - SYS_ADMIN
