@@ -4,7 +4,12 @@ The easiest way to deploy the Gropius system.
 
 ## Production
 
-TBD
+```sh
+docker-compose up
+```
+
+This will provide
+- The public api on port 8080: http://localhost:8080/graphiql
 
 ## Development
 

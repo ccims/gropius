@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+  neo4j:
+    image: neo4j:4.4.11-community
+    restart: unless-stopped
+    volumes:
+      - /conf
+      - /data
+      - /import
+      - /logs
+      - /plugins
+    environment:
+      - NEO4J_dbms_memory_pagecache_size=1G
+      - NEO4J_dbms.memory.heap.initial_size=1G
+      - NEO4J_dbms_memory_heap_max__size=1G
+      - NEO4J_dbms_shell_enabled=true
+      - NEO4J_AUTH=neo4j/TodoNeo4jPassword
+  api-public:
+    build:
+      context: ./gropius-backend
+      dockerfile: ../production-container/Dockerfile-spring
+      args:
+        module: api-public
+    depends_on:
+      - neo4j
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_NEO4J_URI=bolt://neo4j:7687
+      - SPRING_NEO4J_AUTHENTICATION_USERNAME=neo4j
+      - SPRING_NEO4J_AUTHENTICATION_PASSWORD=TodoNeo4jPassword
+      - GROPIUS_API_PUBLIC_JWT_SECRET=TodoLongEnoughAndSecureJwtSecretWithAtLeast256Bit
+      - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
+  api-internal:
+    build:
+      context: ./gropius-backend
+      dockerfile: ../production-container/Dockerfile-spring
+      args:
+        module: api-internal
+    depends_on:
+      - neo4j
+    environment:
+      - SPRING_NEO4J_URI=bolt://neo4j:7687
+      - SPRING_NEO4J_AUTHENTICATION_USERNAME=neo4j
+      - SPRING_NEO4J_AUTHENTICATION_PASSWORD=TodoNeo4jPassword
+      - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
