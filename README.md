@@ -4,6 +4,8 @@ The easiest way to deploy the Gropius system.
 
 ## Production
 
+> :warning: **Before use in production, change environment variable values starting with `Todo`.**
+
 ```sh
 docker-compose up
 ```
