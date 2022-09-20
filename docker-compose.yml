@@ -64,7 +64,7 @@ services:
       - loginservice
     volumes:
       - ./gropius-backend:/root/gropius-backend:ro
-    command: bash -c "./mount-gropius-backend.sh && cd gropius-backend-workdir && while true; do gradle github:bootRun; sleep $GROPIUS_SYNC_GITHUB_INTERVAL;done"
+    command: bash -c "while true; do java -jar ./app.jar; sleep $GROPIUS_SYNC_GITHUB_INTERVAL;done"
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
       - SPRING_DATA_MONGODB_HOST=mongo
