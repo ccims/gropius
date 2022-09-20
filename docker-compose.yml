@@ -49,7 +49,7 @@ services:
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_ROOT_PASSWORD: TODO_root
     ports:
       - 27017:27017
   github:
@@ -62,8 +62,6 @@ services:
       - neo4j
       - mongo
       - loginservice
-    volumes:
-      - ./gropius-backend:/root/gropius-backend:ro
     command: bash -c "while true; do java -jar ./app.jar; sleep $GROPIUS_SYNC_GITHUB_INTERVAL;done"
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
@@ -71,11 +69,7 @@ services:
       - SPRING_DATA_MONGODB_PORT=27017
       - SPRING_DATA_MONGODB_DATABASE=gropius
       - SPRING_DATA_MONGODB_USERNAME=root
-      - SPRING_DATA_MONGODB_PASSWORD=root
+      - SPRING_DATA_MONGODB_PASSWORD=TODO_root
       - GROPIUS_SYNC_GITHUB_LOGIN_SERVICE_BASE=http://loginservice:3000/
-      - GROPIUS_SYNC_GITHUB_API_SECRET=loginSecret
+      - GROPIUS_SYNC_GITHUB_API_SECRET=TODO_loginSecret
       - GROPIUS_SYNC_GITHUB_INTERVAL=1h
-    security_opt:
-      - apparmor=unconfined
-    cap_add:
-      - SYS_ADMIN
