@@ -93,7 +93,8 @@ services:
       - SPRING_DATA_MONGODB_DATABASE=gropius
       - SPRING_DATA_MONGODB_USERNAME=root
       - SPRING_DATA_MONGODB_PASSWORD=root
-      - GITHUB_DUMMY_PAT=${GITHUB_DUMMY_PAT}
+      - GROPIUS_SYNC_GITHUB_LOGIN_SERVICE_BASE=http://loginservice:3000/
+      - GROPIUS_SYNC_GITHUB_API_SECRET=loginSecret
     security_opt:
       - apparmor=unconfined
     cap_add:
