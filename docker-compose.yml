@@ -43,6 +43,7 @@ services:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
       - SPRING_NEO4J_AUTHENTICATION_USERNAME=neo4j
       - SPRING_NEO4J_AUTHENTICATION_PASSWORD=TodoNeo4jPassword
+      - GROPIUS_API_INTERNAL_API_TOKEN=TodoInternalApiToken
       - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
   mongo:
     image: mongo
