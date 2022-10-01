@@ -1,4 +1,5 @@
 version: "3.9"
+name: gropius-dev
 services:
   neo4j:
     image: neo4j:4.4.11-community

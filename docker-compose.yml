@@ -1,4 +1,5 @@
 version: "3.9"
+name: gropius-production
 services:
   neo4j:
     image: neo4j:4.4.11-community
@@ -62,7 +63,6 @@ services:
     depends_on:
       - neo4j
       - mongo
-      - loginservice
     command: bash -c "while true; do java -jar ./app.jar; sleep $GROPIUS_SYNC_GITHUB_INTERVAL;done"
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
