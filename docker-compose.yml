@@ -70,6 +70,7 @@ services:
       - GROPIUS_ACCESS_TOKEN_EXPIRATION_TIME_MS=600000
       - GROPIUS_LOGIN_DATABASE_HOST=postgres
       - GROPIUS_LOGIN_DATABASE_PASSWORD=TodoPostgresPassword
+      - GROPIUS_LOGIN_SYNC_API_SECRET=TODO_loginSecret
   mongo:
     image: mongo
     restart: unless-stopped
@@ -94,5 +95,5 @@ services:
       - SPRING_DATA_MONGODB_DATABASE=gropius
       - SPRING_DATA_MONGODB_USERNAME=root
       - SPRING_DATA_MONGODB_PASSWORD=TODO_mongo_password
-      - GROPIUS_SYNC_LOGIN_SERVICE_BASE=http://loginservice:3000/
+      - GROPIUS_SYNC_LOGIN_SERVICE_BASE=http://login-service:3000/
       - GROPIUS_SYNC_API_SECRET=TODO_loginSecret
