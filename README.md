@@ -16,6 +16,22 @@ This will provide
 - The public GraphQL API on port 8080: http://localhost:8080/graphiql
 - The login-service REST API on port 3000
 
+## Testing
+
+> :warning: **This setup should only be used for debugging the production version!**
+
+```sh
+docker compose -f docker-compose-testing.yaml up
+```
+
+This will provide
+- The public GraphQL API on port 8080: http://localhost:8080/graphiql
+- The login-service REST API on port 3000
+- The internal GraphQL API on port 8081: http://localhost:8081/graphiql
+- Neo4j database on port 7474/7687
+- Sync MongoDB database on port 27017
+- Login PostgreSQL database on port 5432
+
 ## Development
 
 > :warning: **This setup should only be used for development!**
