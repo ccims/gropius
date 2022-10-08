@@ -2,12 +2,14 @@
 
 The easiest way to deploy the Gropius system.
 
+> :warning: Files in this repository are not compatible with the legacy `docker-compose` cli. Use the newer integrated  `docker compose` command instead. See [here](https://docs.docker.com/compose/install/) for install instructions.
+
 ## Production
 
 > :warning: **Before use in production, change environment variable values starting with `Todo`.**
 
 ```sh
-docker-compose up
+docker compose up
 ```
 
 This will provide
@@ -19,7 +21,7 @@ This will provide
 > :warning: **This setup should only be used for development!**
 
 ```sh
-docker-compose -f docker-compose-dev.yaml up
+docker compose -f docker-compose-dev.yaml up
 ```
 
 This will provide
