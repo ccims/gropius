@@ -1,0 +1,103 @@
+name: gropius-testing
+services:
+  neo4j:
+    image: neo4j:4.4.11-community
+    restart: unless-stopped
+    ports:
+      - 7474:7474
+      - 7687:7687
+    volumes:
+      - /conf
+      - /data
+      - /import
+      - /logs
+      - /plugins
+    environment:
+      - NEO4J_dbms_memory_pagecache_size=1G
+      - NEO4J_dbms.memory.heap.initial_size=1G
+      - NEO4J_dbms_memory_heap_max__size=1G
+      - NEO4J_dbms_shell_enabled=true
+      - NEO4J_AUTH=none
+  api-public:
+    build:
+      context: ./gropius-backend
+      dockerfile: ../production-container/Dockerfile-spring
+      args:
+        module: api-public
+    depends_on:
+      - neo4j
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_NEO4J_URI=bolt://neo4j:7687
+      - GROPIUS_API_PUBLIC_JWT_SECRET=TodoLongEnoughAndSecureJwtSecretWithAtLeast256Bit
+      - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
+  api-internal:
+    build:
+      context: ./gropius-backend
+      dockerfile: ../production-container/Dockerfile-spring
+      args:
+        module: api-internal
+    depends_on:
+      - neo4j
+    ports:
+      - 8081:8081
+    environment:
+      - SPRING_NEO4J_URI=bolt://neo4j:7687
+      - GROPIUS_API_INTERNAL_API_TOKEN=TodoInternalApiToken
+      - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
+  postgres:
+    image: postgres:14
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=gropius
+  login-service:
+    build:
+      context: ./gropius-backend/login-service
+      dockerfile: ../../production-container/Dockerfile-nestjs
+    depends_on:
+      - api-internal
+      - postgres
+    ports:
+      - 3000:3000
+    environment:
+      - GROPIUS_LOGIN_SPECIFIC_JWT_SECRET=TodoLoginSpecificLongEnoughAndSecureJwtSecretWithAtLeast256Bit
+      - GROPIUS_INTERNAL_BACKEND_ENDPOINT=http://api-internal:8080
+      - GROPIUS_INTERNAL_BACKEND_TOKEN=TodoInternalApiToken
+      - GROPIUS_INTERNAL_BACKEND_JWT_SECRET=TodoLongEnoughAndSecureJwtSecretWithAtLeast256Bit
+      - GROPIUS_ACCESS_TOKEN_EXPIRATION_TIME_MS=600000
+      - GROPIUS_LOGIN_DATABASE_HOST=postgres
+      - GROPIUS_LOGIN_DATABASE_PASSWORD=postgres
+      - GROPIUS_LOGIN_SYNC_API_SECRET=TODO_loginSecret
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - 27017:27017
+  github:
+    build:
+      context: ./gropius-backend
+      dockerfile: ../production-container/Dockerfile-spring
+      args:
+        module: github
+    depends_on:
+      - neo4j
+      - mongo
+      - login-service
+    command: bash -c "while true; do java -jar ./app.jar; sleep 1h;done"
+    environment:
+      - SPRING_NEO4J_URI=bolt://neo4j:7687
+      - SPRING_DATA_MONGODB_HOST=mongo
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATA_MONGODB_DATABASE=gropius
+      - SPRING_DATA_MONGODB_USERNAME=root
+      - SPRING_DATA_MONGODB_PASSWORD=root
+      - GROPIUS_SYNC_LOGIN_SERVICE_BASE=http://login-service:3000/
+      - GROPIUS_SYNC_API_SECRET=TODO_loginSecret
