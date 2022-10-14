@@ -35,9 +35,10 @@ This will provide
 ## Development
 
 > :warning: **This setup should only be used for development!**
+> :warning: **To use the sync set `GITHUB_DUMMY_PAT` to your token!**
 
 ```sh
-GITHUB_DUMMY_PAT=YourGithubToken docker compose -f docker-compose-dev.yaml up
+docker compose -f docker-compose-dev.yaml up
 ```
 
 This will provide
