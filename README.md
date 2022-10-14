@@ -37,7 +37,7 @@ This will provide
 > :warning: **This setup should only be used for development!**
 
 ```sh
-docker compose -f docker-compose-dev.yaml up
+GITHUB_DUMMY_PAT=YourGithubToken docker compose -f docker-compose-dev.yaml up
 ```
 
 This will provide
@@ -51,5 +51,5 @@ This will provide
 To execute the github sync use:
 
 ```sh
-GITHUB_DUMMY_PAT=YourGithubToken docker-compose -f docker-compose-dev.yaml up github
+docker compose -f docker-compose-dev.yaml up github
 ```

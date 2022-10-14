@@ -7,6 +7,6 @@ export class TokenService {
     constructor(private jwtService: JwtService) {}
 
     getNewTokenForUser(gropiusUser: GropiusUser): string {
-        return this.jwtService.sign({}, { subject: gropiusUser.id });
+        return this.jwtService.sign({}, { subject: gropiusUser.id, audience: "backend" });
     }
 }

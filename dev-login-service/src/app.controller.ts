@@ -5,6 +5,7 @@ import {
     HttpException,
     HttpStatus,
     Post,
+    Put,
     Query,
 } from "@nestjs/common";
 import { AppService } from "./app.service";
@@ -20,7 +21,21 @@ export class AppController {
         private readonly tokenService: TokenService,
         private readonly userService: UserService,
         private readonly htmlService: HtmlService,
-    ) {}
+    ) { }
+
+    @Get("/syncApi/getIMSToken")
+    async getIMSToken(
+        @Query("imsUser") imsUser: string,
+    ): Promise<any> {
+        return { token: process.env.GITHUB_DUMMY_PAT, isImsUserKnown: true };
+    }
+
+    @Put("/syncApi/linkIMSUser")
+    async linkIMSUser(
+        @Query("imsUser") imsUser: string,
+    ): Promise<string> {
+        return "";
+    }
 
     @Get()
     getHello(): string {
@@ -29,32 +44,32 @@ export class AppController {
             this.htmlService.linebreaks(
                 "Dev-Login service.\nGet API token by for example posting username to /token?username=[USERNAME]\n",
             ) +
-                this.htmlService.getForm(
-                    "Generate Token (fill EITHER):",
-                    {
-                        username: { label: "Username: " },
-                        id: { label: "User-Id: " },
+            this.htmlService.getForm(
+                "Generate Token (fill EITHER):",
+                {
+                    username: { label: "Username: " },
+                    id: { label: "User-Id: " },
+                },
+                "/token",
+                "get",
+                "Generate",
+            ) +
+            this.htmlService.getForm(
+                "Create user:",
+                {
+                    username: { label: "Username: " },
+                    displayName: { label: "Display-Name: " },
+                    email: { label: "Email (opt.): " },
+                    isAdmin: {
+                        label: "Is admin: ",
+                        type: "checkbox",
+                        value: "true",
                     },
-                    "/token",
-                    "get",
-                    "Generate",
-                ) +
-                this.htmlService.getForm(
-                    "Create user:",
-                    {
-                        username: { label: "Username: " },
-                        displayName: { label: "Display-Name: " },
-                        email: { label: "Email (opt.): " },
-                        isAdmin: {
-                            label: "Is admin: ",
-                            type: "checkbox",
-                            value: "true",
-                        },
-                    },
-                    "/newUser",
-                    "post",
-                    "Create",
-                ),
+                },
+                "/newUser",
+                "post",
+                "Create",
+            ),
         );
     }
 
