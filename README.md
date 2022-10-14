@@ -34,7 +34,7 @@ This will provide
 
 ## Development
 
-> :warning: **This setup should only be used for development!**
+> :warning: **This setup should only be used for development!**  
 > :warning: **To use the sync set `GITHUB_DUMMY_PAT` to your token!**
 
 ```sh
