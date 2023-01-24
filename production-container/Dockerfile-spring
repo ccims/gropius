@@ -1,4 +1,4 @@
-FROM gradle:7.5.1-jdk17
+FROM gradle:jdk17
 WORKDIR /home/gradle/gropius-backend
 ADD . .
 ARG module
