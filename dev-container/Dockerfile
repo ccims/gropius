@@ -1,3 +1,3 @@
-FROM gradle:jdk18
+FROM gradle:jdk17
 COPY ./mount-gropius-backend.sh /root/
 WORKDIR /root
