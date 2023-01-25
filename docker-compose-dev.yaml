@@ -93,7 +93,7 @@ services:
       - SPRING_DATA_MONGODB_DATABASE=gropius
       - SPRING_DATA_MONGODB_USERNAME=root
       - SPRING_DATA_MONGODB_PASSWORD=root
-      - GROPIUS_SYNC_LOGIN_SERVICE_BASE=http://loginservice:3000/
+      - GROPIUS_SYNC_LOGIN_SERVICE_BASE=http://dev-login-service:3000/
       - GROPIUS_SYNC_API_SECRET=loginSecret
     security_opt:
       - apparmor=unconfined
