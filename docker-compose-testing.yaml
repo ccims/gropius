@@ -58,7 +58,7 @@ services:
     build:
       context: ./gropius-backend/login-service
       dockerfile: ../../production-container/Dockerfile-nestjs
-    command: /bin/sh -c "npx typeorm migration:run -d dist/migrationDataSource.config.js && node dist/main.js"
+    command: /bin/sh -c "npx typeorm migration:run -d dist/migrationDataSource.config.js && sleep 10 && node dist/main.js"
     depends_on:
       - api-internal
       - postgres
