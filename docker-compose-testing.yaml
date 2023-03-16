@@ -66,7 +66,7 @@ services:
       - 3000:3000
     environment:
       - GROPIUS_LOGIN_SPECIFIC_JWT_SECRET=TodoLoginSpecificLongEnoughAndSecureJwtSecretWithAtLeast256Bit
-      - GROPIUS_INTERNAL_BACKEND_ENDPOINT=http://api-internal:8080
+      - GROPIUS_INTERNAL_BACKEND_ENDPOINT=http://api-internal:8080/graphql
       - GROPIUS_INTERNAL_BACKEND_TOKEN=TodoInternalApiToken
       - GROPIUS_INTERNAL_BACKEND_JWT_SECRET=TodoLongEnoughAndSecureJwtSecretWithAtLeast256Bit
       - GROPIUS_ACCESS_TOKEN_EXPIRATION_TIME_MS=600000
