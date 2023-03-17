@@ -83,6 +83,9 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: root
     ports:
       - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
   github:
     build:
       context: ./gropius-backend
@@ -103,3 +106,13 @@ services:
       - SPRING_DATA_MONGODB_PASSWORD=root
       - GROPIUS_SYNC_LOGIN_SERVICE_BASE=http://login-service:3000/
       - GROPIUS_SYNC_API_SECRET=TODO_loginSecret
+
+volumes:
+  neo4j-conf:
+  neo4j-data:
+  neo4j-import:
+  neo4j-logs:
+  neo4j-plugins:
+  postgres-data:
+  mongo-data:
+  mongo-config:
