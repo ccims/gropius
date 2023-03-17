@@ -13,4 +13,5 @@ WORKDIR /home/node
 COPY --from=0 /home/node/package*.json ./
 COPY --from=0 /home/node/node_modules ./node_modules/
 COPY --from=0 /home/node/dist ./dist/
+COPY --from=0 /home/node/static ./static/
 CMD ["node", "dist/main.js"]
