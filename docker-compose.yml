@@ -4,11 +4,11 @@ services:
     image: neo4j:5.3.0-community
     restart: unless-stopped
     volumes:
-      - /conf
-      - /data
-      - /import
-      - /logs
-      - /plugins
+      - neo4j-conf:/conf
+      - neo4j-data:/data
+      - neo4j-import:/import
+      - neo4j-logs:/logs
+      - neo4j-plugins:/plugins
     environment:
       - NEO4J_server_memory_pagecache_size=1G
       - NEO4J_server_memory_heap_initial__size=1G
@@ -47,6 +47,8 @@ services:
   postgres:
     image: postgres:14
     restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=TodoPostgresPassword
@@ -73,6 +75,9 @@ services:
   mongo:
     image: mongo
     restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: TODO_mongo_password
@@ -96,3 +101,13 @@ services:
       - SPRING_DATA_MONGODB_PASSWORD=TODO_mongo_password
       - GROPIUS_SYNC_LOGIN_SERVICE_BASE=http://login-service:3000/
       - GROPIUS_SYNC_API_SECRET=TODO_loginSecret
+
+volumes:
+  neo4j-conf:
+  neo4j-data:
+  neo4j-import:
+  neo4j-logs:
+  neo4j-plugins:
+  postgres-data:
+  mongo-data:
+  mongo-config:
