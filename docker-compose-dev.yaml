@@ -18,38 +18,31 @@ services:
       - NEO4J_server_memory_heap_max__size=1G
       - NEO4J_AUTH=none
   api-public:
-    build: ./dev-container
+    build:
+      context: ./gropius-backend
+      dockerfile: ../production-container/Dockerfile-spring
+      args:
+        module: api-public
     depends_on:
       - neo4j
     ports:
       - 8080:8080
-    volumes:
-      - ./gropius-backend:/root/gropius-backend:ro
-    command: bash -c "./mount-gropius-backend.sh && cd gropius-backend-workdir && gradle api-public:bootRun"
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
       - GROPIUS_API_PUBLIC_JWT_SECRET=ThisIsAnExampleJwtSecretDoNotUseInProduction
       - GROPIUS_API_PUBLIC_DEBUG_NO_AUTHENTICATION=true
-    security_opt:
-      - apparmor=unconfined
-    cap_add:
-      - SYS_ADMIN
   api-internal:
-    build: ./dev-container
+    build:
+      context: ./gropius-backend
+      dockerfile: ../production-container/Dockerfile-spring
+      args:
+        module: api-internal
     depends_on:
       - neo4j
     ports:
-      - 8081:8081
-    volumes:
-      - ./gropius-backend:/root/gropius-backend:ro
-    command: bash -c "./mount-gropius-backend.sh && cd gropius-backend-workdir && gradle api-internal:bootRun"
+      - 8081:8080
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
-      - SERVER_PORT=8081
-    security_opt:
-      - apparmor=unconfined
-    cap_add:
-      - SYS_ADMIN
   dev-login-service:
     image: node:18
     depends_on:
@@ -61,7 +54,7 @@ services:
     working_dir: /app
     command: bash -c "npm i && npm run start"
     environment:
-      - API_ENDPOINT=http://api-internal:8081/graphql
+      - API_ENDPOINT=http://api-internal:8080/graphql
       - JWT_SECRET=ThisIsAnExampleJwtSecretDoNotUseInProduction
       - JWT_ISSUER=dev-login-service
       - INTERNAL_API_KEY=api_key
@@ -78,6 +71,8 @@ services:
       - 27017:27017
   mongo-express:
     image: mongo-express:latest
+    profiles:
+      - github
     container_name: mongo-express
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
@@ -89,15 +84,18 @@ services:
     depends_on:
       - mongo
   github:
-    build: ./dev-container
-    profiles:
-      - github
+    build:
+      context: ./gropius-backend
+      dockerfile: ../production-container/Dockerfile-spring
+      args:
+        module: github
     depends_on:
       - neo4j
       - mongo
-    volumes:
-      - ./gropius-backend:/root/gropius-backend:ro
-    command: bash -c "./mount-gropius-backend.sh && cd gropius-backend-workdir && gradle github:bootRun"
+      - dev-login-service
+    profiles:
+      - github
+    command: bash -c "while true; do java -jar ./app.jar; sleep 1h;done"
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
       - SPRING_DATA_MONGODB_HOST=mongo
@@ -106,8 +104,4 @@ services:
       - SPRING_DATA_MONGODB_USERNAME=root
       - SPRING_DATA_MONGODB_PASSWORD=root
       - GROPIUS_SYNC_LOGIN_SERVICE_BASE=http://dev-login-service:3000/
-      - GROPIUS_SYNC_API_SECRET=loginSecret
-    security_opt:
-      - apparmor=unconfined
-    cap_add:
-      - SYS_ADMIN
+      - GROPIUS_SYNC_API_SECRET=TODO_loginSecret
