@@ -67,6 +67,7 @@ services:
     ports:
       - 3000:3000
     environment:
+      - NODE_ENV=testing
       - GROPIUS_LOGIN_SPECIFIC_JWT_SECRET=TodoLoginSpecificLongEnoughAndSecureJwtSecretWithAtLeast256Bit
       - GROPIUS_INTERNAL_BACKEND_ENDPOINT=http://api-internal:8080/graphql
       - GROPIUS_INTERNAL_BACKEND_TOKEN=TodoInternalApiToken
@@ -75,6 +76,14 @@ services:
       - GROPIUS_LOGIN_DATABASE_HOST=postgres
       - GROPIUS_LOGIN_DATABASE_PASSWORD=postgres
       - GROPIUS_LOGIN_SYNC_API_SECRET=TODO_loginSecret
+      - GROPIUS_DEFAULT_STRATEGY_INSTANCE_TYPE=userpass
+      - GROPIUS_DEFAULT_STRATEGY_INSTANCE_CONFIG={}
+      - GROPIUS_DEFAULT_STRATEGY_INSTANCE_NAME=userpass-local
+      - GROPIUS_DEFAULT_USER_USERNAME=TODO_adminUser
+      - GROPIUS_DEFAULT_USER_DISPLAYNAME=System-Admin
+      - 'GROPIUS_DEFAULT_USER_POST_DATA={"password": "TODO_adminPassword"}'
+      - GROPIUS_DEFAULT_USER_STRATEGY_INSTANCE_NAME=userpass-local
+      - GROPIUS_DEFAULT_AUTH_CLIENT_NAME=initial-client
   mongo:
     image: mongo
     restart: unless-stopped
