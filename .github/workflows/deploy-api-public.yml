@@ -47,6 +47,6 @@ jobs:
           file: ./production-container/Dockerfile-spring
           build-args: |
             module=api-public
-          push: false
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
