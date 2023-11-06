@@ -45,8 +45,8 @@ jobs:
         with:
           context: ./gropius-backend
           file: ./production-container/Dockerfile-spring
-          build-args:
-            module: api-public
+          build-args: |
+            module=api-public
           push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
