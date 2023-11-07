@@ -1,7 +1,7 @@
 name: gropius-production
 services:
   neo4j:
-    image: neo4j:5.3.0-community
+    image: neo4j:5.13.0-community
     restart: unless-stopped
     volumes:
       - /conf
@@ -14,14 +14,22 @@ services:
       - NEO4J_server_memory_heap_initial__size=1G
       - NEO4J_server_memory_heap_max__size=1G
       - NEO4J_AUTH=neo4j/TodoNeo4jPassword
+    healthcheck:
+      test: wget http://localhost:7474 || exit 1
+      interval: 1s
+      timeout: 10s
+      retries: 20
+      start_period: 3s
   api-public:
+    restart: unless-stopped
     build:
       context: ./gropius-backend
       dockerfile: ../production-container/Dockerfile-spring
       args:
         module: api-public
     depends_on:
-      - neo4j
+      neo4j:
+        condition: service_healthy
     ports:
       - 8080:8080
     environment:
@@ -31,19 +39,22 @@ services:
       - GROPIUS_API_PUBLIC_JWT_SECRET=TodoLongEnoughAndSecureJwtSecretWithAtLeast256Bit
       - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
   api-internal:
+    restart: unless-stopped
     build:
       context: ./gropius-backend
       dockerfile: ../production-container/Dockerfile-spring
       args:
         module: api-internal
     depends_on:
-      - neo4j
+      neo4j:
+        condition: service_healthy
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
       - SPRING_NEO4J_AUTHENTICATION_USERNAME=neo4j
       - SPRING_NEO4J_AUTHENTICATION_PASSWORD=TodoNeo4jPassword
       - GROPIUS_API_INTERNAL_API_TOKEN=TodoInternalApiToken
       - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
+      - GROPIUS_CORE_CREATE_INDICES_ON_STARTUP=false
   postgres:
     image: postgres:14
     restart: unless-stopped
@@ -52,6 +63,7 @@ services:
       - POSTGRES_PASSWORD=TodoPostgresPassword
       - POSTGRES_DB=gropius
   login-service:
+    restart: unless-stopped
     build:
       context: ./gropius-backend/login-service
       dockerfile: ../../production-container/Dockerfile-nestjs
