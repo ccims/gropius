@@ -1,3 +1,6 @@
 [submodule "gropius-backend"]
 	path = gropius-backend
 	url = ../../ccims/gropius-backend
+[submodule "gropius-frontend"]
+	path = gropius-frontend
+	url = ../../ccims/gropius-frontend
