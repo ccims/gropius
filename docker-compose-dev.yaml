@@ -7,11 +7,11 @@ services:
       - 7474:7474
       - 7687:7687
     volumes:
-      - /conf
-      - /data
-      - /import
-      - /logs
-      - /plugins
+      - neo4j-conf:/conf
+      - neo4j-data:/data
+      - neo4j-import:/import
+      - neo4j-logs:/logs
+      - neo4j-plugins:/plugins
     environment:
       - NEO4J_server_memory_pagecache_size=1G
       - NEO4J_server_memory_heap_initial__size=1G
@@ -83,6 +83,9 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: root
     ports:
       - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
   mongo-express:
     image: mongo-express:latest
     profiles:
@@ -119,3 +122,11 @@ services:
       - SPRING_DATA_MONGODB_PASSWORD=root
       - GROPIUS_SYNC_LOGIN_SERVICE_BASE=http://dev-login-service:3000/
       - GROPIUS_SYNC_API_SECRET=TODO_loginSecret
+volumes:
+  neo4j-conf:
+  neo4j-data:
+  neo4j-import:
+  neo4j-logs:
+  neo4j-plugins:
+  mongo-data:
+  mongo-config:
