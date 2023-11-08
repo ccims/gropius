@@ -96,11 +96,14 @@ services:
       - 'GROPIUS_DEFAULT_USER_POST_DATA={"password": "TODO_adminPassword"}'
       - GROPIUS_DEFAULT_USER_STRATEGY_INSTANCE_NAME=userpass-local
       - GROPIUS_DEFAULT_AUTH_CLIENT_NAME=initial-client
+      - GROPIUS_DEFAULT_AUTH_CLIENT_ID=8ee1287d-71ff-4c85-becd-cba829f390a0
   frontend:
     restart: unless-stopped
     build:
       context: .
       dockerfile: production-container/Dockerfile-vue
+      args:
+        - VITE_LOGIN_OAUTH_CLIENT_ID=8ee1287d-71ff-4c85-becd-cba829f390a0
     ports:
       - "4200:80"
     depends_on:

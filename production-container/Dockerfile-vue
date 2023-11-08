@@ -7,6 +7,9 @@ WORKDIR /app
 # Copy the frontend source code into the container
 COPY gropius-frontend /app
 
+ARG VITE_LOGIN_OAUTH_CLIENT_ID
+ENV VITE_LOGIN_OAUTH_CLIENT_ID=$VITE_LOGIN_OAUTH_CLIENT_ID
+
 # Install dependencies and build the frontend
 RUN npm install
 RUN cd packages/graph-editor && npm run build
