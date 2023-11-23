@@ -40,6 +40,12 @@ services:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
       - GROPIUS_API_PUBLIC_JWT_SECRET=TodoLongEnoughAndSecureJwtSecretWithAtLeast256Bit
       - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
+    healthcheck:
+      test: wget http://localhost:8080/graphiql || exit 1
+      interval: 1s
+      timeout: 10s
+      retries: 20
+      start_period: 3s
   api-internal:
     restart: unless-stopped
     build:
@@ -57,6 +63,12 @@ services:
       - GROPIUS_API_INTERNAL_API_TOKEN=TodoInternalApiToken
       - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
       - GROPIUS_CORE_CREATE_INDICES_ON_STARTUP=false
+    healthcheck:
+      test: wget http://localhost:8080/graphiql || exit 1
+      interval: 1s
+      timeout: 10s
+      retries: 20
+      start_period: 3s
   postgres:
     image: postgres:14
     restart: unless-stopped
@@ -75,8 +87,10 @@ services:
       dockerfile: ../../production-container/Dockerfile-nestjs
     command: /bin/sh -c "npx typeorm migration:run -d dist/migrationDataSource.config.js && sleep 10 && node dist/main.js"
     depends_on:
-      - api-internal
-      - postgres
+      api-internal:
+        condition: service_healthy
+      postgres:
+        condition: service_started
     ports:
       - 3000:3000
     environment:
@@ -102,14 +116,16 @@ services:
     restart: unless-stopped
     build:
       context: .
-      dockerfile: production-container/Dockerfile-vue
-      args:
-        - VITE_LOGIN_OAUTH_CLIENT_ID=8ee1287d-71ff-4c85-becd-cba829f390a0
+      dockerfile: ./production-container/Dockerfile-vue
     ports:
       - "4200:80"
     depends_on:
-      - api-public
-      - login-service
+      api-public:
+        condition: service_healthy
+      login-service:
+        condition: service_started
+    environment:
+      - LOGIN_OAUTH_CLIENT_ID=8ee1287d-71ff-4c85-becd-cba829f390a0
   mongo:
     image: mongo
     restart: unless-stopped
