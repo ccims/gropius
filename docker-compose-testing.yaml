@@ -1,7 +1,7 @@
 name: gropius-testing
 services:
   neo4j:
-    image: neo4j:5.13.0-community
+    image: neo4j:5.14.0-community
     restart: unless-stopped
     ports:
       - 7474:7474
@@ -126,6 +126,8 @@ services:
         condition: service_started
     environment:
       - LOGIN_OAUTH_CLIENT_ID=8ee1287d-71ff-4c85-becd-cba829f390a0
+      - API_PUBLIC_ENDPOINT=http://api-public:8080/graphql
+      - LOGIN_SERVICE_ENDPOINT=http://login-service:3000
   mongo:
     image: mongo
     restart: unless-stopped
