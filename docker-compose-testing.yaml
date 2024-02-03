@@ -1,7 +1,7 @@
 name: gropius-testing
 services:
   neo4j:
-    image: neo4j:5.14.0-community
+    image: neo4j:5.16.0-community
     restart: unless-stopped
     ports:
       - 7474:7474

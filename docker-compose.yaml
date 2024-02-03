@@ -39,6 +39,12 @@ services:
       - SPRING_NEO4J_AUTHENTICATION_PASSWORD=TodoNeo4jPassword
       - GROPIUS_API_PUBLIC_JWT_SECRET=TodoLongEnoughAndSecureJwtSecretWithAtLeast256Bit
       - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
+    healthcheck:
+      test: wget http://localhost:8080/graphiql || exit 1
+      interval: 1s
+      timeout: 10s
+      retries: 20
+      start_period: 3s
   api-internal:
     restart: unless-stopped
     build:
@@ -56,6 +62,12 @@ services:
       - GROPIUS_API_INTERNAL_API_TOKEN=TodoInternalApiToken
       - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
       - GROPIUS_CORE_CREATE_INDICES_ON_STARTUP=false
+    healthcheck:
+      test: wget http://localhost:8080/graphiql || exit 1
+      interval: 1s
+      timeout: 10s
+      retries: 20
+      start_period: 3s
   postgres:
     image: postgres:14
     restart: unless-stopped
@@ -72,19 +84,52 @@ services:
       dockerfile: ../../production-container/Dockerfile-nestjs
     command: /bin/sh -c "npx typeorm migration:run -d dist/migrationDataSource.config.js && sleep 10 && node dist/main.js"
     depends_on:
-      - api-internal
-      - postgres
+      api-internal:
+        condition: service_healthy
+      postgres:
+        condition: service_started
     ports:
       - 3000:3000
     environment:
       - GROPIUS_LOGIN_SPECIFIC_JWT_SECRET=TodoLoginSpecificLongEnoughAndSecureJwtSecretWithAtLeast256Bit
-      - GROPIUS_INTERNAL_BACKEND_ENDPOINT=http://api-internal:8080
+      - GROPIUS_INTERNAL_BACKEND_ENDPOINT=http://api-internal:8080/graphql
       - GROPIUS_INTERNAL_BACKEND_TOKEN=TodoInternalApiToken
       - GROPIUS_INTERNAL_BACKEND_JWT_SECRET=TodoLongEnoughAndSecureJwtSecretWithAtLeast256Bit
       - GROPIUS_ACCESS_TOKEN_EXPIRATION_TIME_MS=600000
       - GROPIUS_LOGIN_DATABASE_HOST=postgres
       - GROPIUS_LOGIN_DATABASE_PASSWORD=TodoPostgresPassword
       - GROPIUS_LOGIN_SYNC_API_SECRET=TODO_loginSecret
+      - GROPIUS_DEFAULT_STRATEGY_INSTANCE_TYPE=userpass
+      - GROPIUS_DEFAULT_STRATEGY_INSTANCE_CONFIG={}
+      - GROPIUS_DEFAULT_STRATEGY_INSTANCE_NAME=userpass-local
+      - GROPIUS_DEFAULT_USER_USERNAME=admin
+      - GROPIUS_DEFAULT_USER_DISPLAYNAME=System-Admin
+      - 'GROPIUS_DEFAULT_USER_POST_DATA={"password": "admin"}'
+      - GROPIUS_DEFAULT_USER_STRATEGY_INSTANCE_NAME=userpass-local
+      - GROPIUS_DEFAULT_AUTH_CLIENT_NAME=initial-client
+      - GROPIUS_DEFAULT_AUTH_CLIENT_ID=8ee1287d-71ff-4c85-becd-cba829f390a0
+    healthcheck:
+      test: wget http://localhost:8080/graphiql || exit 1
+      interval: 1s
+      timeout: 10s
+      retries: 20
+      start_period: 3s
+  frontend:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./production-container/Dockerfile-vue
+    ports:
+      - "4200:80"
+    depends_on:
+      api-public:
+        condition: service_healthy
+      login-service:
+        condition: service_started
+    environment:
+      - LOGIN_OAUTH_CLIENT_ID=8ee1287d-71ff-4c85-becd-cba829f390a0
+      - API_PUBLIC_ENDPOINT=http://api-public:8080/graphql
+      - LOGIN_SERVICE_ENDPOINT=http://login-service:3000
   mongo:
     image: mongo
     restart: unless-stopped
