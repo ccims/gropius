@@ -19,7 +19,7 @@ services:
       - NEO4J_AUTH=none
       - NEO4J_dbms_directories_run=/run
     healthcheck:
-      test: wget http://localhost:7474 || exit 1
+      test: wget -qO - http://localhost:7474 || exit 1
       interval: 1s
       timeout: 10s
       retries: 20
@@ -41,7 +41,7 @@ services:
       - GROPIUS_API_PUBLIC_JWT_SECRET=TodoLongEnoughAndSecureJwtSecretWithAtLeast256Bit
       - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
     healthcheck:
-      test: wget http://localhost:8080/graphiql || exit 1
+      test: wget -qO - http://localhost:8080/graphiql || exit 1
       interval: 1s
       timeout: 10s
       retries: 20
@@ -64,7 +64,7 @@ services:
       - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
       - GROPIUS_CORE_CREATE_INDICES_ON_STARTUP=false
     healthcheck:
-      test: wget http://localhost:8080/graphiql || exit 1
+      test: wget -qO - http://localhost:8080/graphiql || exit 1
       interval: 1s
       timeout: 10s
       retries: 20
