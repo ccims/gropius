@@ -149,7 +149,27 @@ services:
       - neo4j
       - mongo
       - login-service
-    command: bash -c "while true; do java -jar ./app.jar; sleep 1h;done"
+    command: java -jar ./app.jar
+    environment:
+      - SPRING_NEO4J_URI=bolt://neo4j:7687
+      - SPRING_DATA_MONGODB_HOST=mongo
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATA_MONGODB_DATABASE=gropius
+      - SPRING_DATA_MONGODB_USERNAME=root
+      - SPRING_DATA_MONGODB_PASSWORD=root
+      - GROPIUS_SYNC_LOGIN_SERVICE_BASE=http://login-service:3000/
+      - GROPIUS_SYNC_API_SECRET=TODO_loginSecret
+  jira:
+    build:
+      context: ./gropius-backend
+      dockerfile: ../production-container/Dockerfile-spring
+      args:
+        module: jira
+    depends_on:
+      - neo4j
+      - mongo
+      - login-service
+    command: java -jar ./app.jar
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
       - SPRING_DATA_MONGODB_HOST=mongo
