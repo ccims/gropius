@@ -145,6 +145,8 @@ services:
       - login-service
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
+      - SPRING_NEO4J_AUTHENTICATION_USERNAME=neo4j
+      - SPRING_NEO4J_AUTHENTICATION_PASSWORD=TodoNeo4jPassword
       - SPRING_DATA_MONGODB_HOST=mongo
       - SPRING_DATA_MONGODB_PORT=27017
       - SPRING_DATA_MONGODB_DATABASE=gropius
@@ -164,6 +166,8 @@ services:
       - login-service
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
+      - SPRING_NEO4J_AUTHENTICATION_USERNAME=neo4j
+      - SPRING_NEO4J_AUTHENTICATION_PASSWORD=TodoNeo4jPassword
       - SPRING_DATA_MONGODB_HOST=mongo
       - SPRING_DATA_MONGODB_PORT=27017
       - SPRING_DATA_MONGODB_DATABASE=gropius
