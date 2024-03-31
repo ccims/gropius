@@ -149,7 +149,6 @@ services:
       - neo4j
       - mongo
       - login-service
-    command: java -jar ./app.jar
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
       - SPRING_DATA_MONGODB_HOST=mongo
@@ -169,7 +168,6 @@ services:
       - neo4j
       - mongo
       - login-service
-    command: java -jar ./app.jar
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
       - SPRING_DATA_MONGODB_HOST=mongo
