@@ -1,7 +1,7 @@
 name: gropius-production
 services:
   neo4j:
-    image: neo4j:5.13.0-community
+    image: ghcr.io/graphglue/neo4j:main
     restart: unless-stopped
     volumes:
       - neo4j-conf:/conf
@@ -39,6 +39,7 @@ services:
       - SPRING_NEO4J_AUTHENTICATION_PASSWORD=TodoNeo4jPassword
       - GROPIUS_API_PUBLIC_JWT_SECRET=TodoLongEnoughAndSecureJwtSecretWithAtLeast256Bit
       - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
+      - GRAPHGLUE_CORE_USE_NEO4J_PLUGIN=true
     healthcheck:
       test: wget -qO - http://localhost:8080/graphiql || exit 1
       interval: 1s
@@ -62,6 +63,7 @@ services:
       - GROPIUS_API_INTERNAL_API_TOKEN=TodoInternalApiToken
       - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
       - GROPIUS_CORE_CREATE_INDICES_ON_STARTUP=false
+      - GRAPHGLUE_CORE_USE_NEO4J_PLUGIN=true
     healthcheck:
       test: wget -qO - http://localhost:8080/graphiql || exit 1
       interval: 1s
