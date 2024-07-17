@@ -24,7 +24,6 @@ services:
     restart: unless-stopped
     build:
       context: ./gropius-backend
-      dockerfile: ../production-container/Dockerfile-spring
       args:
         module: api-public
     depends_on:
@@ -49,7 +48,6 @@ services:
     restart: unless-stopped
     build:
       context: ./gropius-backend
-      dockerfile: ../production-container/Dockerfile-spring
       args:
         module: api-internal
     depends_on:
@@ -92,10 +90,10 @@ services:
     ports:
       - 3000:3000
     environment:
+      - GROPIUS_OAUTH_JWT_SECRET=TodoLongEnoughAndSecureJwtSecretWithAtLeast256Bit
       - GROPIUS_LOGIN_SPECIFIC_JWT_SECRET=TodoLoginSpecificLongEnoughAndSecureJwtSecretWithAtLeast256Bit
       - GROPIUS_INTERNAL_BACKEND_ENDPOINT=http://api-internal:8080/graphql
       - GROPIUS_INTERNAL_BACKEND_TOKEN=TodoInternalApiToken
-      - GROPIUS_INTERNAL_BACKEND_JWT_SECRET=TodoLongEnoughAndSecureJwtSecretWithAtLeast256Bit
       - GROPIUS_ACCESS_TOKEN_EXPIRATION_TIME_MS=600000
       - GROPIUS_LOGIN_DATABASE_HOST=postgres
       - GROPIUS_LOGIN_DATABASE_PASSWORD=TodoPostgresPassword
@@ -107,13 +105,12 @@ services:
       - GROPIUS_DEFAULT_USER_DISPLAYNAME=System-Admin
       - 'GROPIUS_DEFAULT_USER_POST_DATA={"password": "admin"}'
       - GROPIUS_DEFAULT_USER_STRATEGY_INSTANCE_NAME=userpass-local
-      - GROPIUS_DEFAULT_AUTH_CLIENT_NAME=initial-client
-      - GROPIUS_DEFAULT_AUTH_CLIENT_ID=8ee1287d-71ff-4c85-becd-cba829f390a0
+      - GROPIUS_ENDPOINT=http://localhost:4200
+      - GROPIUS_LOGIN_SERVICE_ENDPOINT=http://localhost:4200/auth
   frontend:
     restart: unless-stopped
     build:
-      context: .
-      dockerfile: ./production-container/Dockerfile-vue
+      context: gropius-frontend
     ports:
       - "4200:80"
     depends_on:
@@ -137,7 +134,6 @@ services:
   github:
     build:
       context: ./gropius-backend
-      dockerfile: ../production-container/Dockerfile-spring
       args:
         module: github
     depends_on:
@@ -158,7 +154,6 @@ services:
   jira:
     build:
       context: ./gropius-backend
-      dockerfile: ../production-container/Dockerfile-spring
       args:
         module: jira
     depends_on:

@@ -1,6 +1,9 @@
 [submodule "gropius-backend"]
 	path = gropius-backend
-	url = ../../ccims/gropius-backend
+	url = ../gropius-backend
 [submodule "gropius-frontend"]
 	path = gropius-frontend
-	url = ../../ccims/gropius-frontend
+	url = ../gropius-frontend
+[submodule "gropius-login-service"]
+	path = gropius-login-service
+	url = ../gropius-login-service
