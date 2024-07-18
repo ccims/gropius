@@ -109,7 +109,6 @@ services:
       - 'GROPIUS_DEFAULT_USER_POST_DATA={"password": "admin"}'
       - GROPIUS_DEFAULT_USER_STRATEGY_INSTANCE_NAME=userpass-local
       - GROPIUS_ENDPOINT=http://localhost:4200
-      - GROPIUS_LOGIN_SERVICE_ENDPOINT=http://localhost:4200/auth
   frontend:
     restart: unless-stopped
     build:
