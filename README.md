@@ -6,7 +6,7 @@ The easiest way to deploy the Gropius system.
 
 ## Production
 
-> :warning: **Before use in production, change environment variable values starting with `Todo`.**
+> :warning: **Before use in production, change environment variable values starting with `Todo`. Also replace all public/private keys found in .env**
 
 ```sh
 docker compose up
