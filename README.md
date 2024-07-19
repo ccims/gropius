@@ -6,15 +6,15 @@ The easiest way to deploy the Gropius system.
 
 ## Production
 
-> :warning: **Before use in production, change environment variable values starting with `Todo`. Also replace all public/private keys found in .env**
+To generate a valid configuration, run `./generate_env.sh`.
+This command will write the `.env` file, configuring all required secrets.
 
 ```sh
 docker compose up
 ```
 
 This will provide
-- The public GraphQL API on port 8080: http://localhost:8080/graphiql
-- The login-service REST API on port 3000
+- The frontend on port 4200: http://localhost:4200
 
 ## Testing
 
@@ -25,6 +25,7 @@ docker compose -f docker-compose-testing.yaml up
 ```
 
 This will provide
+- The frontend on port 4200: http://localhost:4200
 - The public GraphQL API on port 8080: http://localhost:8080/graphiql
 - The login-service REST API on port 3000
 - The internal GraphQL API on port 8081: http://localhost:8081/graphiql
