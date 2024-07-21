@@ -45,8 +45,6 @@ services:
       timeout: 10s
       retries: 20
       start_period: 3s
-    env_file:
-      - testing.env
   api-internal:
     restart: unless-stopped
     build:
