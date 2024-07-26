@@ -1,0 +1,222 @@
+---
+sidebar_position: 3
+slug: /jira-sync
+---
+
+# Jira sync
+
+The Jira sync binary runs cycles scheduled with a default value of 10min.
+Currently supported are titles, descriptions, comments and labels
+
+## Single Execution
+
+Each cycle consists of two parts: Incoming and Outgoing.
+The incoming phase only syncs data from Jira to gropius while the outgoing phase syncs only from gropius to Jira.
+
+### Incoming
+
+During the Incoming phase the sync first downloads all new events from Jira.
+These events are immediately added to the MongoDB and the timestamps for the Jira api moved to avoid repeated downloads.
+
+After everything has been downloaded, the missing issues are created and all timeline items inserted into the timelines.
+
+### Outgoing
+
+The outgoing phase collects all new issues and timeline items that have no known Jira id and have not been invalidated (e.g. no reopen after close event).
+These differences are then collected and prepared for submission to Jira.
+
+After all mutations are collected, a final damage control check ensures that the amount of mutations does not exceed a threshold to prevent damage to larger public repositories in case of issues with the sync.
+Then all of the mutations are executed and the ids of the created issues and timeline items added to the MongoDB.
+
+## How to use
+
+When the server side is running, the repos which should be synced have to be set.
+To mark an `IMS` to connect to Jira, the sync service creates the Jira `IMSTemplate` on first run.
+
+This can be used to create an `IMS`, which requires:
+* the id of an `IMSUser` owning the token which is then used to query the issues (`null` until an `IMSUser` is created for this `IMS`)
+* and the URL of the REST endpoint of the Jira instance (e.g. `https://<Something>.atlassian.net/rest/api/2` for the Cloud Jira)
+in the appropriate `templatedFields`.
+
+If using the dev-login-service, the `IMSUser` is not created automatically and has to be created via request to the internal api (should be port 8081) with the mutation `createIMSUser`.
+The username is meaningless, as every user gets the environmentally set token by the dev-login-service.
+As this requires the `IMS` to exist this then has to be updated using `updateIMS`
+
+With the `IMS` and a `Trackable`, an `IMSProject` can be created. Each one requires the repo as object in the appropriate templated field.
+
+These `IMSProject`s are then synced during each cycle.
+
+### Example:
+
+For authorization ask the dev login service (http://localhost:3000/) to create an user (lower half) and then generate a token (upper half).
+The token is returned as pile of dotted base64 as the only content in the side.
+To use it in the playground (http://localhost:8080/graphiql), you need to paste `{"Authorization": "Bearer <Content of second dev-login response>"}` in the header part usually on the lower left.
+
+Ensure the environment variable `JIRA_DUMMY_EMAIL` and `JIRA_DUMMY_TOKEN` is set to a valid jira token combination
+
+Create Trackable
+```
+mutation {
+  createProject(input: {name: "n", description: "desc"}) {
+    project {
+      id
+    }
+  }
+}
+```
+```json
+{
+  "data": {
+    "createProject": {
+      "project": {
+        "id": "<Trackable ID>"
+      }
+    }
+  }
+}
+```
+
+Find IMSTemplate
+```gql
+query {
+  imsTemplates {
+    nodes {
+      id
+    }
+  }
+}
+```
+```json
+{
+  "data": {
+    "imsTemplates": {
+      "nodes": [
+        {
+          "id": "<IMSTemplate ID>"
+        }
+      ]
+    }
+  }
+}
+```
+
+Create IMS
+```gql
+mutation {
+  createIMS(
+    input: {template: "<IMSTemplate ID>", templatedFields: [
+      {name: "graphql-url", value: "<Some IMSUser>"},
+      {name: "root-url", value: "https://<Something>.atlassian.net/rest/api/2"}
+    ], description: "desc", name: "n"}
+  ) {
+    ims {
+      id
+    }
+  }
+}
+```
+```json
+{
+  "data": {
+    "createIMS": {
+      "ims": {
+        "id": "<IMS ID>"
+      }
+    }
+  }
+}
+```
+
+Create IMSProject
+```gql
+mutation {
+  createIMSProject(
+    input: {ims: "<IMS ID>", trackable: "<Trackable ID>", templatedFields:
+      [
+        {name: "repo", value: "<Some Jira repo>"},
+        {name: "enable-outgoing", value: true},
+        {name: "enable-outgoing-labels", value: true},
+        {name: "enable-outgoing-comments", value: true},
+        {name: "enable-outgoing-title-changes", value: true},
+        {name: "enable-outgoing-state", value: true},
+      ]
+    }
+  ) {
+    imsProject {
+      id
+    }
+  }
+}
+```
+```json
+{
+  "data": {
+    "createIMSProject": {
+      "imsproject": {
+        "id": "<IMS Project ID>"
+      }
+    }
+  }
+}
+```
+
+Create IMSUser (warning: Internal API!!! use `http://localhost:8081/graphiql` with dev)
+```gql
+mutation {
+  createIMSUser(
+    input: {ims: "<IMS ID>", templatedFields: [], username: "test", displayName: "test"}
+  ) {
+    imsUser {
+      id
+    }
+  }
+}
+```
+```json
+{
+  "data": {
+    "createIMSUser": {
+      "imsuser": {
+        "id": "<IMSUser ID>"
+      }
+    }
+  }
+}
+```
+
+Update IMS with IMSUser (back in the normal API)
+```gql
+mutation {
+  updateIMS(
+    input: {id: "<IMS ID>", templatedFields: {name: "read-user", value: "<IMSUser ID>"}}
+  ) {
+    ims {
+      id
+    }
+  }
+}
+```
+
+Execute sync once or twice
+
+See Result with
+```gql
+query {
+  projects(first: 100) {
+    nodes {
+      id
+      issues {
+        nodes {
+          id
+          title
+          timelineItems(last: 100) {
+            nodes {
+              __typename
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```

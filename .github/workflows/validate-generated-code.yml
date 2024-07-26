@@ -1,0 +1,64 @@
+name: Validate generated code
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate-generated-code:
+    name: Validate generated code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 21.x
+          cache: npm
+          cache-dependency-path: "**/package-lock.json"
+      - name: Install login-service dependencies
+        run: npm ci
+        working-directory: gropius-login-service/backend
+      - name: Validate login service generated code
+        shell: bash {0}
+        run: |
+          cd gropius-backend
+          ./gradlew api-internal:bootRun --args="--server.port=8081 --gropius.core.createIndicesOnStartup=false" --no-daemon &
+          gradlew_pid=$!
+          cd ..
+          schema_endpoint="http://localhost:8081/sdl"
+          c=0
+          until curl -s -f -o /dev/null $schema_endpoint
+          do
+              ((c++))
+              if ((c > 120)); then
+                  echo "Failed to get graphql schema: timeout"
+                  exit 1
+              fi
+              echo "Waiting for server"
+              sleep 2
+          done
+          cd gropius-login-service/backend
+          echo "Validating login-service generated code"
+          if ! npm run generate-model; then
+            echo "Failed to generate model"
+            exit 1
+          fi
+          git status
+          git diff
+          if [[ `git status --porcelain` ]]; then
+            echo "Outdated generated code in gropius-login-service/backend"
+            exit 1
+          else
+            echo "gropius-login-service/backend up to date"
+          fi
+          kill $gradlew_pid
