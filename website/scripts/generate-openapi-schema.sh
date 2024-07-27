@@ -3,7 +3,12 @@
 mkdir -p ./website/schemas
 
 cd gropius-login-service/backend
-npm run start:dev &
+export NODE_ENV="development"
+export GROPIUS_LOGIN_DATABASE_DRIVER="sqlite"
+export GROPIUS_DEFAULT_CHECK_DATABASE_CONSISTENT="none"
+export GROPIUS_DEFAULT_ENTITIES_ENABLED="false"
+
+npm start &
 npm_pid=$!
 schema_endpoint="http://localhost:3001/login-api-doc-json"
 c=0

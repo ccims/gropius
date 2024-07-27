@@ -8,15 +8,15 @@ const apiSidebar = require("./sidebars").apiSidebar
 
 async function createConfig() {
     return {
-        title: "Gropius Backend",
+        title: "Gropius",
         url: "https://ccims.github.io/",
         favicon: "img/logo.svg",
-        baseUrl: "/gropius-backend-docs/",
+        baseUrl: "/gropius-docs/",
         onBrokenLinks: "throw",
         onBrokenMarkdownLinks: "throw",
         onDuplicateRoutes: "throw",
         organizationName: "ccims",
-        projectName: "gropius-backend-docs",
+        projectName: "gropius-docs",
         trailingSlash: false,
         markdown: {
             mermaid: true
@@ -166,8 +166,8 @@ async function createConfig() {
             [
                 "docusaurus-plugin-typedoc",
                 {
-                    entryPoints: ["../login-service/src/"],
-                    tsconfig: "../login-service/tsconfig.json",
+                    entryPoints: ["../gropius-login-service/backend/src/"],
+                    tsconfig: "../gropius-login-service/backend/tsconfig.json",
                     entryPointStrategy: "expand",
                     out: "login-service-api"
                 }

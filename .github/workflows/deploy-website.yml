@@ -25,7 +25,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: Execute Gradle build
         run: ./gradlew build dokkaHtmlMultiModule
-        working-directory: gropiud-backend
+        working-directory: gropius-backend
       - name: Save graphql schemas
         run: ./website/scripts/generate-graphql-schema.sh
       - uses: actions/setup-node@v3
