@@ -102,7 +102,7 @@ services:
       - GROPIUS_DEFAULT_USER_DISPLAYNAME=System-Admin
       - 'GROPIUS_DEFAULT_USER_POST_DATA={"password": "$GROPIUS_ADMIN_PASSWORD"}'
       - GROPIUS_DEFAULT_USER_STRATEGY_INSTANCE_NAME=userpass-local
-      - GROPIUS_ENDPOINT=http://localhost:4200
+      - GROPIUS_ENDPOINT=$GROPIUS_HOST
   frontend:
     restart: unless-stopped
     build:
