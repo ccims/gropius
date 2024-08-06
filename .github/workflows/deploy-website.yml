@@ -1,0 +1,73 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  NODE_OPTIONS: '--max_old_space_size=6144'
+
+jobs:
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Execute Gradle build
+        run: ./gradlew build dokkaHtmlMultiModule
+        working-directory: gropius-backend
+      - name: Save graphql schemas
+        run: ./website/scripts/generate-graphql-schema.sh
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 21.x
+          cache: npm
+          cache-dependency-path: "**/package-lock.json"
+      - name: Install login-service dependencies
+        run: npm ci
+        working-directory: gropius-login-service/backend
+      - name: Save openapi schemas
+        run: ./website/scripts/generate-openapi-schema.sh
+      - name: Modify Dokka output
+        uses: graphglue/dokka-html-mdx-transform@v1.7.20
+        with:
+          src: "gropius-backend/build/dokka/htmlMultiModule"
+          modules: |
+            core
+            api-common
+            api-public
+            api-internal
+            sync
+            github
+            jira
+          dest: "website/docs"
+          folder: "api"
+      - name: Install dependencies
+        run: npm ci
+        working-directory: website
+      - name: Update graphql documentation
+        run: ./website/scripts/update-graphql-doc.sh
+      - name: Update rest documentation
+        run: ./website/scripts/update-rest-doc.sh
+      - name: Build website
+        run: npm run build
+        working-directory: website
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          publish_dir: ./website/build
+          force_orphan: true
+          external_repository: ccims/gropius-docs
+          publish_branch: main

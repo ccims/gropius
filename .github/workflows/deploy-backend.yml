@@ -1,4 +1,4 @@
-name: Create and publish the login-service Docker image
+name: Create and publish backend Docker images
 
 on:
   push:
@@ -15,6 +15,13 @@ jobs:
     permissions:
       contents: read
       packages: write
+    strategy:
+      matrix:
+        module:
+          - api-public
+          - api-internal
+          - github
+          - jira
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,11 +37,13 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/gropius-login-service
+          images: ${{ env.REGISTRY }}/gropius-${{ matrix.module }}
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./gropius-login-service
+          context: ./gropius-backend
+          build-args: |
+            module=${{ matrix.module }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
