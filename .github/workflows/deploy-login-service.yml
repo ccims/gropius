@@ -30,7 +30,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/gropius-login-service
+          images: ${{ env.REGISTRY }}/ccims/gropius-login-service
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
