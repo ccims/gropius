@@ -37,7 +37,7 @@ services:
       - LOGGING_LEVEL_IO_GITHUB_GRAPHGLUE=WARN
       - GRAPHGLUE_CORE_USE_NEO4J_PLUGIN=true
     healthcheck:
-      test: wget -qO - http://localhost:8080/graphiql || exit 1
+      test: wget -qO - http://localhost:8080/health || exit 1
       interval: 1s
       timeout: 10s
       retries: 20
@@ -60,7 +60,7 @@ services:
       - GROPIUS_CORE_CREATE_INDICES_ON_STARTUP=false
       - GRAPHGLUE_CORE_USE_NEO4J_PLUGIN=true
     healthcheck:
-      test: wget -qO - http://localhost:8080/graphiql || exit 1
+      test: wget -qO - http://localhost:8080/health || exit 1
       interval: 1s
       timeout: 10s
       retries: 20
@@ -126,11 +126,11 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: $GROPIUS_MONGO_PASSWORD
-  github:
+  sync-github:
     build:
       context: ./gropius-backend
       args:
-        module: github
+        module: sync-github
     depends_on:
       - neo4j
       - mongo
@@ -146,11 +146,17 @@ services:
       - SPRING_DATA_MONGODB_PASSWORD=$GROPIUS_MONGO_PASSWORD
       - GROPIUS_SYNC_LOGIN_SERVICE_BASE=http://login-service:3000/
       - GROPIUS_SYNC_API_SECRET=$GROPIUS_SYNC_API_SECRET
-  jira:
+    healthcheck:
+      test: wget -qO - http://localhost:8080/health || exit 1
+      interval: 1s
+      timeout: 10s
+      retries: 20
+      start_period: 3s
+  sync-jira:
     build:
       context: ./gropius-backend
       args:
-        module: jira
+        module: sync-jira
     depends_on:
       - neo4j
       - mongo
@@ -166,6 +172,12 @@ services:
       - SPRING_DATA_MONGODB_PASSWORD=$GROPIUS_MONGO_PASSWORD
       - GROPIUS_SYNC_LOGIN_SERVICE_BASE=http://login-service:3000/
       - GROPIUS_SYNC_API_SECRET=$GROPIUS_SYNC_API_SECRET
+    healthcheck:
+      test: wget -qO - http://localhost:8080/health || exit 1
+      interval: 1s
+      timeout: 10s
+      retries: 20
+      start_period: 3s
 
 volumes:
   neo4j-conf:

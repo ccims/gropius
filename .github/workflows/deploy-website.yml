@@ -48,8 +48,8 @@ jobs:
             api-public
             api-internal
             sync
-            github
-            jira
+            sync-github
+            sync-jira
           dest: "website/docs"
           folder: "api"
       - name: Install dependencies

@@ -22,8 +22,8 @@ jobs:
         module:
           - api-public
           - api-internal
-          - github
-          - jira
+          - sync-github
+          - sync-jira
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
