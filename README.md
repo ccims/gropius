@@ -4,6 +4,14 @@ The easiest way to deploy the Gropius system.
 
 > :warning: Files in this repository are not compatible with the legacy `docker-compose` cli. Use the newer integrated  `docker compose` command instead. See [here](https://docs.docker.com/compose/install/) for install instructions.
 
+## Repository 
+
+To clone the repository use:
+
+```sh
+git clone --recurse-submodules https://github.com/ccims/gropius.git
+```
+
 ## Production
 
 To generate a valid configuration, run `./generate_env.sh`.
@@ -33,10 +41,20 @@ This will provide
 - Sync MongoDB database on port 27017
 - Login PostgreSQL database on port 5432
 
+
 ### GitHub sync
 
 To execute the github sync use:
 
 ```sh
-docker compose -f docker-compose-dev.yaml up github
+docker compose -f docker-compose-testing.yaml up github
+```
+
+## Volumes
+
+Data is persisted in volumes.
+To stop Gropius *and remove the volumes* use: 
+
+```
+docker compose -f docker-compose-testing.yaml down --volumes 
 ```
