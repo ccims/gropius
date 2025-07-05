@@ -50,10 +50,10 @@ To execute the github sync use:
 docker compose -f docker-compose-testing.yaml up github
 ```
 
-## Volumes
+### Volumes
 
 Data is persisted in volumes.
-To stop Gropius *and remove the volumes* use: 
+To stop Gropius **and remove the volumes** use: 
 
 ```
 docker compose -f docker-compose-testing.yaml down --volumes 
