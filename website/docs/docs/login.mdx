@@ -5,7 +5,7 @@ slug: /login
 
 # Login Service
 
-The following doc page uses [the defined terminology](#Terminology)
+The following doc page uses [the defined terminology](#terminology)
 
 [NestJS](https://nestjs.com/) service providing authentication and login services for the gropius-backend.
 
@@ -26,7 +26,7 @@ A strategy is defined by the following capabilities
 Strategies are defined as service classes (which can be part of the main code base or provided by separate modules).
 
 One strategy corresponds to one _type_ of authentication (e.g. GitHub OAuth, OpenID connect). Of this type _"strategy instances"_ ca be created that represent one actual authentication provider (e.g. a specific GitHub Enterprise instance, Microsoft Azure OpenID connect).
-Instances can be created at runtime by instanciating one defined strategy and providing all required configuration (e.g. for GitHub OAuth the OAuth Endpoints and client credentials).
+Instances can be created at runtime by instantiating one defined strategy and providing all required configuration (e.g. for GitHub OAuth the OAuth Endpoints and client credentials).
 
 Once a user authenticates using a strategy instance, this authentication creates _"login data"_, representing the association of the authenticated gropius-user and the strategy instance. It contains all data required to "recognize" a user on following authentications.
 A single login/authentication event for one login data is called a _"active login"_
