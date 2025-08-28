@@ -74,7 +74,7 @@ async function createConfig() {
                         docsPluginId: "rest-docs"
                     },
                     {
-                        href: "https://github.com/ccims/gropius-backend",
+                        href: "https://github.com/ccims",
                         label: "GitHub",
                         position: "right",
                     },
