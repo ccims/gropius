@@ -38,7 +38,7 @@ services:
       - GRAPHGLUE_CORE_USE_NEO4J_PLUGIN=true
     healthcheck:
       test: wget -qO - http://localhost:8080/health || exit 1
-      interval: 1s
+      interval: 2s
       timeout: 10s
       retries: 20
       start_period: 3s
@@ -61,7 +61,7 @@ services:
       - GRAPHGLUE_CORE_USE_NEO4J_PLUGIN=true
     healthcheck:
       test: wget -qO - http://localhost:8080/health || exit 1
-      interval: 1s
+      interval: 2s
       timeout: 10s
       retries: 20
       start_period: 3s
@@ -148,7 +148,7 @@ services:
       - GROPIUS_SYNC_API_SECRET=$GROPIUS_SYNC_API_SECRET
     healthcheck:
       test: wget -qO - http://localhost:8080/health || exit 1
-      interval: 1s
+      interval: 2s
       timeout: 10s
       retries: 20
       start_period: 3s
@@ -174,7 +174,7 @@ services:
       - GROPIUS_SYNC_API_SECRET=$GROPIUS_SYNC_API_SECRET
     healthcheck:
       test: wget -qO - http://localhost:8080/health || exit 1
-      interval: 1s
+      interval: 2s
       timeout: 10s
       retries: 20
       start_period: 3s
