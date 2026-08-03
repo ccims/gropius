@@ -1,8 +1,3 @@
----
-sidebar_position: 3
-slug: /jira-sync
----
-
 # Jira sync
 
 The Jira sync binary runs cycles scheduled with a default value of 10min.

@@ -1,12 +1,7 @@
----
-sidebar_position: 4
-slug: /how-to-login
----
-
 # How-To Login-Service (or rather Hot-To use the Gropius Backend at all)
 This How-To will the essential steps to get a Gropius installation going including a fully functional login-service. It will use the testing docker-compose file, as the development docker-compose file uses the dev login service which is intended to easily provide access tokens but does not include the full login service functionality.
 
-:::caution
+:::warning
 Some steps taken in this how to might however NOT be appropriate for a production setup!
 :::
 
@@ -83,7 +78,7 @@ Needed configuration variables:
 #### Auth client creation
 As every active login of a user must be bound to an auth client (a software that required the user to authenticate) you need to create one as well.
 
-:::caution
+:::warning
 The auth client will be created WITHOUT requiring a client secret. This means EVERYBODY who knows the id of the client can simply initiate a user login as this client. It is recommended, you add at least a client secret immediately after setup. Especially if the service is accessible for others.
 :::
 
@@ -97,7 +92,7 @@ To start all services (running in testing mode = debugging web interface ports a
 docker compose -f docker-compose-testing.yaml up
 ```
 
-:::caution
+:::warning
 This compose file should not be used in production
 :::
 
@@ -166,7 +161,7 @@ Once initialized with a default admin user as described above, you likely want t
     - The fields for access and refresh token should now be filled
     - If you ran the requests manually, make sure to save both tokens as the access token will expire after the set period of time and you will neet to refresh it
 
-:::caution
+:::warning
 If you are in a production environment or set `GROPIUS_ALLOW_PASSWORD_TOKEN_MODE_WITHOUT_OAUTH_CLIENT=false`, then you need to authenticate with an OAuth client for **every** request involving access tokens. See "OAuth clients" below.
 :::
 
@@ -174,7 +169,7 @@ If you are in a production environment or set `GROPIUS_ALLOW_PASSWORD_TOKEN_MODE
 - If you request a token refresh, your old access AND refresh token will become invalid.
 - The access and refresh token fields on the debg page will automatically be filled with the new tokens (idependant of the settings)
 
-:::caution
+:::warning
 If a refresh token is used twice, the whole chain of tokens including the valid ones will be inalidated for security reasons.
 :::
 

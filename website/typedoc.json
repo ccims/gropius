@@ -1,0 +1,21 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
+    "entryPoints": ["../gropius-login-service/backend/src"],
+    "entryPointStrategy": "expand",
+    "tsconfig": "../gropius-login-service/backend/tsconfig.json",
+    "out": "docs/login-service",
+    "docsRoot": "docs",
+    "readme": "none",
+    "githubPages": false,
+    "skipErrorChecking": true,
+    "excludeExternals": true,
+    "excludePrivate": false,
+    "sort": ["kind", "alphabetical"],
+    "sidebar": {
+        "autoConfiguration": true,
+        "format": "vitepress",
+        "collapsed": true,
+        "pretty": true
+    }
+}

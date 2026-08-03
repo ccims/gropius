@@ -1,8 +1,3 @@
----
-sidebar_position: 3
-slug: /github-sync
----
-
 # GitHub sync
 
 The GitHub sync binary runs cycles scheduled with a default value of 10min.

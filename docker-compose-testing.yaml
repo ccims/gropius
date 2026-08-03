@@ -124,7 +124,6 @@ services:
       login-service:
         condition: service_started
     environment:
-      - LOGIN_OAUTH_CLIENT_ID=8ee1287d-71ff-4c85-becd-cba829f390a0
       - API_PUBLIC_ENDPOINT=http://api-public:8080/graphql
       - LOGIN_SERVICE_ENDPOINT=http://login-service:3000
   mongo:
@@ -149,11 +148,11 @@ services:
       - login-service
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
-      - SPRING_DATA_MONGODB_HOST=mongo
-      - SPRING_DATA_MONGODB_PORT=27017
-      - SPRING_DATA_MONGODB_DATABASE=gropius
-      - SPRING_DATA_MONGODB_USERNAME=root
-      - SPRING_DATA_MONGODB_PASSWORD=root
+      - SPRING_MONGODB_HOST=mongo
+      - SPRING_MONGODB_PORT=27017
+      - SPRING_MONGODB_DATABASE=gropius
+      - SPRING_MONGODB_USERNAME=root
+      - SPRING_MONGODB_PASSWORD=root
       - GROPIUS_SYNC_LOGIN_SERVICE_BASE=http://login-service:3000/
       - GROPIUS_SYNC_API_SECRET=TODO_loginSecret
     healthcheck:
@@ -173,11 +172,11 @@ services:
       - login-service
     environment:
       - SPRING_NEO4J_URI=bolt://neo4j:7687
-      - SPRING_DATA_MONGODB_HOST=mongo
-      - SPRING_DATA_MONGODB_PORT=27017
-      - SPRING_DATA_MONGODB_DATABASE=gropius
-      - SPRING_DATA_MONGODB_USERNAME=root
-      - SPRING_DATA_MONGODB_PASSWORD=root
+      - SPRING_MONGODB_HOST=mongo
+      - SPRING_MONGODB_PORT=27017
+      - SPRING_MONGODB_DATABASE=gropius
+      - SPRING_MONGODB_USERNAME=root
+      - SPRING_MONGODB_PASSWORD=root
       - GROPIUS_SYNC_LOGIN_SERVICE_BASE=http://login-service:3000/
       - GROPIUS_SYNC_API_SECRET=TODO_loginSecret
     healthcheck:
