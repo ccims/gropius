@@ -1,8 +1,3 @@
----
-sidebar_position: 3
-slug: /login
----
-
 # Login Service
 
 The following doc page uses [the defined terminology](#terminology)

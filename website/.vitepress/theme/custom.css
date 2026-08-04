@@ -1,0 +1,86 @@
+/**
+ * Gropius branding.
+ *
+ * Everything about how the Kotlin API reference looks lives in `@graphglue/dokka-vitepress`, which
+ * derives its colours from the VitePress tokens set here - so re-branding the site re-brands the
+ * generated Kotlin docs with it.
+ */
+
+:root {
+    --vp-c-brand-1: #00639b;
+    --vp-c-brand-2: #00527f;
+    --vp-c-brand-3: #0083cc;
+    --vp-c-brand-soft: rgba(0, 131, 204, 0.14);
+
+    --vp-home-hero-name-color: transparent;
+    --vp-home-hero-name-background: linear-gradient(120deg, #0083cc 30%, #46b3ff);
+
+    /*
+     * VitePress puts a large blurred blob behind the hero image. The logo is itself blue, so a blue
+     * blob directly behind it is what made it hard to make out - it reads best against the plain
+     * page background.
+     */
+    --vp-home-hero-image-background-image: none;
+    --vp-home-hero-image-filter: none;
+}
+
+.dark {
+    --vp-c-brand-1: #7cd0ff;
+    --vp-c-brand-2: #9bdbff;
+    --vp-c-brand-3: #0083cc;
+    --vp-c-brand-soft: rgba(0, 131, 204, 0.24);
+}
+
+/*
+ * The logo is a 64px SVG and VitePress only bounds the hero image with `max-width`, which does not
+ * scale anything up - so it rendered at 64px in a slot sized for 320. Sizing it explicitly fills it.
+ */
+.VPHero .image-src {
+    width: 192px;
+    height: 192px;
+}
+
+@media (min-width: 640px) {
+    .VPHero .image-src {
+        width: 256px;
+        height: 256px;
+    }
+}
+
+@media (min-width: 960px) {
+    .VPHero .image-src {
+        width: 320px;
+        height: 320px;
+    }
+}
+
+/**
+ * The generated GraphQL pages separate a field from its type with a bullet, and close a
+ * collapsible block with a "show less" label. Both come from `scripts/graphql-vitepress-formatter.mjs`.
+ */
+.graphql-markdown-bullet {
+    color: var(--vp-c-text-3);
+    font-size: 0.75em;
+    vertical-align: middle;
+}
+
+.graphql-markdown-entity {
+    font-weight: normal;
+}
+
+.graphql-markdown-details-close {
+    color: var(--vp-c-text-2);
+    font-size: 0.9em;
+}
+
+/* Mermaid renders into an SVG that has no business being as wide as its viewBox claims. */
+.mermaid {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+}
+
+.mermaid svg {
+    max-width: 100%;
+    height: auto;
+}

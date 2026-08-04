@@ -1,13 +1,6 @@
----
-sidebar_position: 2
-slug: /modules
----
-
 # Modules
 
-# Runnable Modules
-
-<div className="mermaid-c4">
+## Runnable Modules
 
 ```mermaid
 C4Dynamic
@@ -35,10 +28,8 @@ C4Dynamic
     Rel(github, mongodb, "mongodb/TCP")
     Rel(login-service, postgres, "TCP")
 ```
-    
-</div>
 
-## api-public
+### api-public
 
 The main GraphQL API of the backend.
 Can safely be publicly exposed and can be horizontally scaled. 
@@ -68,7 +59,7 @@ Configuration for [Spring Data Neo4j](https://docs.spring.io/spring-data/neo4j/d
 ./gradlew api-public:bootRun
 ```
 
-## api-internal
+### api-internal
 
 The internal GraphQL API of the backend.
 MUST NOT be publicly exposed as no authentication or authorization is done.
@@ -97,7 +88,7 @@ Configuration for [Spring Data Neo4j](https://docs.spring.io/spring-data/neo4j/d
 ./gradlew api-internal:bootRun
 ```
 
-## login-service
+### login-service
 
 Nodejs/Nestjs service that does the user management and authentication for the gropius-backend.
 It will generate tokens for the user to use to identify against the api.
@@ -215,11 +206,11 @@ If a user with that username already exists or the credentials aren't unique, th
 ./gradlew login-service:npm_start
 ```
 
-## github
+### github
 
 Github sync that executes exactly one sync cycle.
 May not be executed more than once at the same time.
-Documentation about the concept can be found [here](github.mdx).  
+Documentation about the concept can be found [here](./github).  
 Depends on [sync](#sync)
 
 #### Configuration
@@ -242,9 +233,9 @@ Configuration for [sync](#sync), [Spring Data Neo4j](https://docs.spring.io/spri
 ./gradlew github:bootRun
 ```
 
-# Abstract Modules
+## Abstract Modules
 
-## core
+### core
 
 The core part of the Gropius backend, contains the domain model as well as service and repository classes.  
 Requires a Neo4j database, for the configuration see [Configure the project](https://docs.spring.io/spring-data/neo4j/docs/current/reference/html/#configure-spring-boot-project).
@@ -259,7 +250,7 @@ Configuration for [Spring Data Neo4j](https://docs.spring.io/spring-data/neo4j/d
 #### Runtime Dependencies
 - Neo4j database
 
-## api-common
+### api-common
 
 Contains common functionality for [api-public](#api-public) and [api-internal](#api-internal).  
 By default, the API is provided on port 8080 at the endpoint `/graphql`, a GraphiQL can be found at `/graphiql`. 
@@ -276,7 +267,7 @@ Configuration for [Spring Data Neo4j](https://docs.spring.io/spring-data/neo4j/d
 #### Runtime Dependencies
 - Neo4j database
 
-## sync
+### sync
 
 Contains abstract helpers for general sync development.  
 Depends on [core](#core)
