@@ -39,14 +39,6 @@ jobs:
           cache: npm
           cache-dependency-path: "**/package-lock.json"
 
-      # Not released yet, so the backend cannot resolve it from a repository. Everything else the
-      # backend needs comes from Maven Central or the Sonatype snapshot repository.
-      - name: Install the Dokka GraphQL description plugin
-        run: |
-          git clone --depth 1 https://github.com/graphglue/dokka-graphql-description-plugin.git "$RUNNER_TEMP/dokka-graphql-description-plugin"
-          cd "$RUNNER_TEMP/dokka-graphql-description-plugin"
-          ./gradlew publishToMavenLocal --no-daemon
-
       - name: Install website dependencies
         run: npm ci
         working-directory: website

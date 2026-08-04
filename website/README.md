@@ -15,22 +15,10 @@ generated from the sources of the three submodules and is not checked in:
 
 - Node.js 22 or newer
 - A JDK 21, for the Gradle runs that produce the Dokka output and the GraphQL schemas
-- `dokka-graphql-description-plugin` in the local Maven repository, see below
 
-### The Dokka plugin has to be installed locally
-
-`dokka-graphql-description-plugin` is what makes Dokka fall back to the contents of
-`@GraphQLDescription` where a declaration has no KDoc. The version the backend asks for is not
-released yet, so it has to be built from a checkout next to this repository:
-
-```sh
-cd ../../dokka-graphql-description-plugin
-./gradlew publishToMavenLocal
-```
-
-graph-glue resolves from the Sonatype snapshot repository on its own and needs nothing. To test a
-local change to it, run `./gradlew publishToMavenLocal` there as well - the backend's
-`settings.gradle.kts` prefers the local copy over the snapshot.
+Everything the backend build needs, including `dokka-graphql-description-plugin` - which makes Dokka
+fall back to the contents of `@GraphQLDescription` where a declaration has no KDoc - and graph-glue,
+resolves from Maven Central. Nothing has to be installed by hand.
 
 ## Getting started
 
