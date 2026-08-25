@@ -196,7 +196,7 @@ If a user with that username already exists or the credentials aren't unique, th
 
 #### Runtime Dependencies
 - Postgres database
-- [internal-api](#internal-api)
+- [api-internal](#api-internal)
 
 #### Run
 ```sh
