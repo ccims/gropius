@@ -1,6 +1,6 @@
 # iPraktikum adapter testing handoff
 
-Implemented on the local branch `feat/ipraktikum-issue-sync` in this deployment repository and all three submodules. The deployment commit pins the tested submodule commits. No production repository was connected or modified, and these branches have not been pushed.
+Implemented on the local branch `feat/ipraktikum-issue-sync` in this deployment repository and all three submodules. The deployment commit pins the tested submodule commits. No production repository was connected or modified. The related pull requests in the deployment repository and all three submodules describe the integration and merge dependencies.
 
 ## What is ready
 
@@ -13,9 +13,9 @@ Implemented on the local branch `feat/ipraktikum-issue-sync` in this deployment 
 
 | Check | Result |
 |---|---|
-| Kotlin metadata/merge/workflow tests | 8 passed |
+| Kotlin metadata/merge/workflow tests | 10 passed |
 | Integration scenario with real isolated Neo4j/MongoDB and stateful GitLab HTTP fixture | Passed |
-| GitLab credential encryption/linking/rotation tests | 2 passed |
+| GitLab credential encryption/linking/rotation and validation-failure tests | 3 passed |
 | Runnable adapter JAR | Built |
 | Login-service build and runtime module loading in credential tests | Passed |
 | Frontend graph-editor build, Vue type check, production build | Passed |
@@ -23,9 +23,9 @@ Implemented on the local branch `feat/ipraktikum-issue-sync` in this deployment 
 
 The integration scenario exercises incoming/outgoing issue creation, unchanged-cycle idempotency, component labels, workflow moves, parallel assignment roles, explicit empty primary assignment, rich relation edits/removals, native generic-link deletion, human-owned comment corrections, and copied-identity rejection/adoption. Test containers were isolated from application data and removed after verification.
 
-## Next: target GitLab acceptance test
+## Acceptance testing
 
-Use a disposable monorepo on the actual self-hosted GitLab instance and a test cohort in Gropius. We still need its URL/version/project ID and a bot PAT with the required project access. Component IDs, issue vocabulary, and state/default mappings are supplied through runtime setup rather than deployment constants.
+A local self-hosted GitLab acceptance environment was exercised with bidirectional issue creation and edits, readable component labels, coarse/fine states, ordinary labels, comments, linked user display, and the issue editing controls. Its machine-local access details are recorded in [the local environment guide](IPRAKTIKUM_LOCAL_ENVIRONMENT.md). Repeat acceptance checks on the intended deployment with a disposable monorepo, test cohort, and bot PAT. Component IDs, issue vocabulary, and state/default mappings are supplied through runtime setup rather than deployment constants.
 
 Follow the [adapter setup and testing guide](gropius-backend/sync-ipraktikum/README.md). Start with dry run, inspect the discovered vocabulary and proposed imports/exports, then enable writes. Check the native GitLab boards and permissions on this instance; the HTTP fixture cannot validate its UI or server-specific behavior.
 
@@ -40,3 +40,5 @@ GitLab users are identified by their numeric ID within the IMS instance, and exp
 Verify an existing imported GitLab comment displays the linked Gropius profile after refresh. Verify the tooltip still identifies the external account. The ordinary GitLab API attributes exported issues/comments to the configured token account; account linking does not impersonate users or rewrite GitLab's native author. Exported comments include a Gropius attribution footer.
 
 The linked-user change passed frontend type checking and a production build.
+
+The label mutation response regression script (`gropius-backend/api-public/scripts/check-label-response.mjs`) completed 100 consecutive add/remove checks against the local API without response-loading errors. The priority picker was verified with an unset priority and an empty priority vocabulary. The Affects picker was verified to list the cohort project, its Frontend/Backend components, and their versions.
