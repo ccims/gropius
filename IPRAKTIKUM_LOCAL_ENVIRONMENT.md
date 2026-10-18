@@ -27,6 +27,8 @@ Project **iPraktikum Local Test** has **Frontend** and **Backend** components an
 
 Component labels use the configured aliases `component/frontend` and `component/backend`; internal component keys remain stable. Frontend uses a rectangular template and Backend a hexagonal template.
 
+Ordinary labels (such as `UI`) synchronize additions and removals in both directions by exact name. New counterpart labels copy color and description; later changes to those attributes are not mirrored automatically.
+
 Automatic bidirectional sync is enabled and polls every 15 seconds. GitHub/Jira adapters are absent from this stack. The GitLab board has `workflow/ready`, `workflow/doing`, and `workflow/review` lists, plus its built-in Open/Closed lists. Review and Testing share the review bucket; exact Gropius state survives unchanged labels. Done closes the GitLab issue. The Gropius board has all five individual states. New issues can be added to Gropius boards through the normal board UI; board membership itself is not synchronized.
 
 Two sample issues demonstrate import/export, identity metadata, multi-component labels, typed assignments/relations and comment attribution. The generated YAML section in GitLab descriptions is editable. Component/vocabulary keys come from runtime discovery in the IMSProject setup panel. To inspect or change sync configuration, open **IMSs → Local GitLab → iPraktikum Monorepo → General**.
