@@ -32,3 +32,11 @@ Follow the [adapter setup and testing guide](gropius-backend/sync-ipraktikum/REA
 Accepted constraints: shared cohort visibility, structured description editing, best-effort concurrency (students avoid concurrent edits), and one adapter per cohort. The initial worker performs complete scans suitable for a teaching cohort; it does not depend on webhook delivery. Architectural `affects` mapping, attachment mirroring, and complete historical impersonation are outside this implementation.
 
 The production Compose overlay additionally requires the normal deployment secrets and a persistent `GROPIUS_GITLAB_TOKEN_ENCRYPTION_KEY`. Back up that key and the Neo4j integration records before using real cohort data.
+
+### Linked user presentation
+
+GitLab users are identified by their numeric ID within the IMS instance, and explicitly linked to a Gropius account. The frontend resolves that link when displaying authors, timeline actors, and assignees: it uses the linked Gropius name/avatar and retains the external account in the tooltip. Unlinked users keep their external profile. Historical items retain their original IMSUser reference, so later linking/unlinking takes effect without rewriting history or confusing user IDs in mutations.
+
+Verify an existing imported GitLab comment displays the linked Gropius profile after refresh. Verify the tooltip still identifies the external account. The ordinary GitLab API attributes exported issues/comments to the configured token account; account linking does not impersonate users or rewrite GitLab's native author. Exported comments include a Gropius attribution footer.
+
+The linked-user change passed frontend type checking and a production build.
