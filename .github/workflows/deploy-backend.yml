@@ -24,6 +24,7 @@ jobs:
           - api-internal
           - sync-github
           - sync-jira
+          - sync-ipraktikum
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
