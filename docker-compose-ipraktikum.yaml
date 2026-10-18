@@ -1,0 +1,32 @@
+# Layer over docker-compose.yaml for the dedicated iPraktikum deployment.
+services:
+  sync-github:
+    profiles: [traditional-sync]
+  sync-jira:
+    profiles: [traditional-sync]
+  login-service:
+    environment:
+      GROPIUS_GITLAB_TOKEN_ENCRYPTION_KEY: ${GROPIUS_GITLAB_TOKEN_ENCRYPTION_KEY:?Set a persistent base64-encoded 32-byte encryption key}
+  sync-ipraktikum:
+    build:
+      context: ./gropius-backend
+      args:
+        module: sync-ipraktikum
+    restart: unless-stopped
+    depends_on: [neo4j, mongo, login-service]
+    environment:
+      SPRING_NEO4J_URI: bolt://neo4j:7687
+      SPRING_NEO4J_AUTHENTICATION_USERNAME: neo4j
+      SPRING_NEO4J_AUTHENTICATION_PASSWORD: ${GROPIUS_NEO4J_PASSWORD}
+      SPRING_MONGODB_HOST: mongo
+      SPRING_MONGODB_PORT: 27017
+      SPRING_MONGODB_DATABASE: gropius
+      SPRING_MONGODB_USERNAME: root
+      SPRING_MONGODB_PASSWORD: ${GROPIUS_MONGO_PASSWORD}
+      GROPIUS_SYNC_LOGIN_SERVICE_BASE: http://login-service:3000/
+      GROPIUS_SYNC_API_SECRET: ${GROPIUS_SYNC_API_SECRET}
+    healthcheck:
+      test: wget -qO - http://localhost:8080/health || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 20

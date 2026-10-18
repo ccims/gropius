@@ -50,6 +50,18 @@ To execute the github sync use:
 docker compose -f docker-compose-testing.yaml up github
 ```
 
+### iPraktikum GitLab sync
+
+The dedicated GitLab Free monorepo adapter has production and development Compose overlays:
+
+```sh
+docker compose -f docker-compose.yaml -f docker-compose-ipraktikum.yaml up --build -d
+# Or, with the development setup:
+docker compose -f docker-compose-testing.yaml -f docker-compose-ipraktikum-testing.yaml up --build -d
+```
+
+Set a persistent `GROPIUS_GITLAB_TOKEN_ENCRYPTION_KEY` before starting. The overlays disable the GitHub/Jira workers by default. Configure the cohort through the iPraktikum IMSProject panel; components and issue vocabularies are discovered at runtime. See the [adapter setup and testing guide](gropius-backend/sync-ipraktikum/README.md).
+
 ### Volumes
 
 Data is persisted in volumes.
